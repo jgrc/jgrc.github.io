@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on JGRC Blog</title>
+    <title>Categories on Project</title>
     <link>/categories/</link>
-    <description>Recent content in Categories on JGRC Blog</description>
+    <description>Recent content in Categories on Project</description>
     <generator>Hugo -- gohugo.io</generator>
     
 	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Tutorial Juego Canvas 2d</title>
-      <link>/categories/tutorial-juego-canvas-2d/</link>
+      <title>Tutorial Game Canvas 2d.js</title>
+      <link>/categories/tutorial-game-canvas-2d.js/</link>
       <pubDate>Sun, 20 Jan 2019 17:30:00 +0100</pubDate>
       
-      <guid>/categories/tutorial-juego-canvas-2d/</guid>
+      <guid>/categories/tutorial-game-canvas-2d.js/</guid>
       <description></description>
     </item>
     

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Javascript on JGRC Blog</title>
+    <title>Javascript on Project</title>
     <link>/tags/javascript/</link>
-    <description>Recent content in Javascript on JGRC Blog</description>
+    <description>Recent content in Javascript on Project</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 20 Jan 2019 17:30:00 +0100</lastBuildDate>
     
@@ -11,21 +11,21 @@
     
     
     <item>
-      <title>Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</title>
+      <title>tut03-canvas-2d.js</title>
       <link>/posts/canvas-2d-game/tutorial-03/</link>
       <pubDate>Sun, 20 Jan 2019 17:30:00 +0100</pubDate>
       
       <guid>/posts/canvas-2d-game/tutorial-03/</guid>
-      <description>Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la lección anterior vimos cómo crear las entidades que necesita el juego mediante herencia de los atributos y métodos en común, y cómo empezar a dibujar el juego en la pantalla. Es hora de hacer que los aliens y el jugador se muevan un poco.</description>
+      <description>Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte. Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la lección anterior vimos cómo crear las entidades que necesita el juego mediante herencia de los atributos y métodos en común, y cómo empezar a dibujar el juego en la pantalla. Es hora de hacer que los aliens y el jugador se muevan un poco.</description>
     </item>
     
     <item>
-      <title>Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte</title>
+      <title>tut02-canvas-2d.js</title>
       <link>/posts/canvas-2d-game/tutorial-02/</link>
       <pubDate>Sat, 19 Jan 2019 20:30:00 +0100</pubDate>
       
       <guid>/posts/canvas-2d-game/tutorial-02/</guid>
-      <description>Bienvenidos al remake de la segunda parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la primera lección, hablábamos un poco sobre la estructura general que tienen los videojuegos, de forma muy sencilla, de cómo ibamos a diseñar nuestro juego, y un par de consejos sobre cómo depurar. Por lo tanto, supongo que es el momento de empezar ya con la programación real del juego.</description>
+      <description>Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte. Bienvenidos al remake de la segunda parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la primera lección, hablábamos un poco sobre la estructura general que tienen los videojuegos, de forma muy sencilla, de cómo ibamos a diseñar nuestro juego, y un par de consejos sobre cómo depurar.</description>
     </item>
     
   </channel>

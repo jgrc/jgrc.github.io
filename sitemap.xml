@@ -52,12 +52,6 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/tags/javascript/</loc>
     <lastmod>2019-01-20T17:30:00+01:00</lastmod>
     <priority>0</priority>
@@ -65,6 +59,12 @@
   
   <url>
     <loc>/posts/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/</loc>
     <lastmod>2019-01-20T17:30:00+01:00</lastmod>
     <priority>0</priority>
   </url>
@@ -100,7 +100,7 @@
   </url>
   
   <url>
-    <loc>/categories/tutorial-juego-canvas-2d/</loc>
+    <loc>/categories/tutorial-game-canvas-2d.js/</loc>
     <lastmod>2019-01-20T17:30:00+01:00</lastmod>
     <priority>0</priority>
   </url>
