@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Diseño on JGRC Blog</title>
+    <link>/tags/dise%C3%B1o/</link>
+    <description>Recent content in Diseño on JGRC Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 19 Jan 2019 18:00:00 +0100</lastBuildDate>
+    
+	<atom:link href="/tags/dise%C3%B1o/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Tutorial canvas 2D - Cómo hacer un juego en javascript 1ª parte</title>
+      <link>/posts/canvas-2d-game/tutorial-01/</link>
+      <pubDate>Sat, 19 Jan 2019 18:00:00 +0100</pubDate>
+      
+      <guid>/posts/canvas-2d-game/tutorial-01/</guid>
+      <description>Introducción Bienvenidos al remake de mi primer tutorial sobre cómo realizar un pequeño juego en JavaScript, mas concretamente el tan viejo como popular Space Invaders. Para programarlo, me fue de gran utilidad el tutorial de Kevin Glass sobre cómo programar videojuegos en Java, quien también escogió el Space Invaders como punto de partida. En su día, hace ya 8 años, hice una conversión de Java a Javascript mas o menos fiel, que aunque en el nombre de estos lenguajes ambos incluyen la palabra java, JS se parece a aquél tanto como un huevo a una castaña.</description>
+    </item>
+    
+  </channel>
+</rss>

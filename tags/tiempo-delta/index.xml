@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tiempo Delta on JGRC Blog</title>
+    <link>/tags/tiempo-delta/</link>
+    <description>Recent content in Tiempo Delta on JGRC Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 20 Jan 2019 17:30:00 +0100</lastBuildDate>
+    
+	<atom:link href="/tags/tiempo-delta/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</title>
+      <link>/posts/canvas-2d-game/tutorial-03/</link>
+      <pubDate>Sun, 20 Jan 2019 17:30:00 +0100</pubDate>
+      
+      <guid>/posts/canvas-2d-game/tutorial-03/</guid>
+      <description>Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la lección anterior vimos cómo crear las entidades que necesita el juego mediante herencia de los atributos y métodos en común, y cómo empezar a dibujar el juego en la pantalla. Es hora de hacer que los aliens y el jugador se muevan un poco.</description>
+    </item>
+    
+  </channel>
+</rss>

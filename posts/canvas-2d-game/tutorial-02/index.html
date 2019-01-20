@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="Juan Gabriel Rodríguez Carrión">
+
+<meta name="description" content="">
+
+<title>Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte</title>
+<meta name="generator" content="Hugo 0.53" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="/css/theme.min.css" rel="stylesheet" type="text/css">
+<link  href="/css/custom.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    
+    <h3 class="home-link"><a href="">JGRC Blog</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">JGRC Blog - Posts mas recientes</h3>
+        <ul>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-03/">Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-02/">Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-01/">Tutorial canvas 2D - Cómo hacer un juego en javascript 1ª parte</a></li>
+            
+            <li><a href="/about/">Sobre el autor</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="tags" class="open">
+        <h3 data-open="tags">Tags</h3>
+        <ul class="tags">
+            
+            <li><a href="/tags/canvas">canvas</a></li>
+            
+            <li><a href="/tags/console">console</a></li>
+            
+            <li><a href="/tags/dise%C3%B1o">diseño</a></li>
+            
+            <li><a href="/tags/evento">evento</a></li>
+            
+            <li><a href="/tags/javascript">javascript</a></li>
+            
+            <li><a href="/tags/space-invaders">space-invaders</a></li>
+            
+            <li><a href="/tags/sprites">sprites</a></li>
+            
+            <li><a href="/tags/teclado">teclado</a></li>
+            
+            <li><a href="/tags/tiempo-delta">tiempo-delta</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="categories" class="open">
+        <h3 data-open="categories">Categorías</h3>
+        <ul class="categories">
+            
+            <li><a href="/categories/tutorial-juego-canvas-2d">tutorial-juego-canvas-2d</a></li>
+            
+        </ul>
+    </div>
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte</h1>
+<h4>Publicado en 2019-01-19 20:30:00</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="/posts/canvas-2d-game/tutorial-02/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p>Bienvenidos al remake de la segunda parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la <a href="/posts/canvas-2d-game/tutorial-01/">primera lección</a>, hablábamos un poco sobre la estructura general que tienen los videojuegos, de forma muy sencilla, de cómo ibamos a diseñar nuestro juego, y un par de consejos sobre cómo depurar. Por lo tanto, supongo que es el momento de empezar ya con la programación real del juego.</p>
+
+<p><img align="left" src="/img/posts/canvas-2d-game/tutorial-02.png" alt="Tutorial 02" title="Tutorial 02" style="padding: 10px;" /></p>
+
+<p><a href="/code/posts/canvas-2d-game/tutorial-02/">Aquí</a> puedes correr la versión del juego que vamos a detallar en este artículo.</p>
+
+<p>He estado pensando en cómo abordar el código. De un lado, tengo la posibilidad de programar la versión final del juego, e ir explicándola mas o menos siguiendo el orden en el que se ejecuta. Me facilitaría la vida a la hora de escribir el tutorial, pero quizá no hablaría de algunos conceptos que se me pasaron por la cabeza cuando hice tal cosa, o no quedaría lo suficientemente claro el funcionamiento concreto de algún trozo de código que a otra parte del juego que aún no se ha visto y que se verá muy posteriormente.</p>
+
+<p>Así que finalmente me he decidido por la que me parece más natural: Explicar el código en el mismo orden en el que lo he ido programado. Nadie en su sano juicio pensaría que un juego (o cualquier aplicación ligeramente complicada) se programa del tirón, es decir, escribir línea a línea todo el código final de forma seguida. Normalmente se programa un poco de una clase, se salta a otra clase que la maneja, se vuelve a la primera clase y se le añaden unos pocos atributos y métodos más, etc, siguiendo algun esquema mental que te agrade más. Concretamente, a mí me gusta programar primero una versión muy sencilla de las clases que representan los componentes del juego que se van a pintar en pantalla. A continuación, hago una muy básica versión del bucle del juego para que pinte en pantalla a las entidades aún en estado muy primitivo. Así, al ver algo dibujándose, cojo moral para continuar con el código. Vuelvo a la clases de las entidades, y les añado un poco de código para que empiecen a moverse. Cuando todo está a mi gusto, me pongo con la entidad que representa al jugador, y a leer las teclas del teclado. Y así, poco a poco, el juego cada vez un poco más va cogiendo su forma final. También pruebo inmediatamente cada cosa que añado, para que si por desgracia cometo un error (algo que garantizo que te va a ocurrir) pueda solucionarlo instantáneamente y no arrastre bugs que luego pueden ser muy difíciles de detectar y corregir. Ya me entendereis cuando os pongais a programar vuestros propios juegos.</p>
+
+<h2 id="el-elemento-canvas">El elemento CANVAS</h2>
+
+<p>Una de las novedades más importantes que trajo HTML5 es el elemento CANVAS, y junto a él, un objeto en javascript con un montón de comandos de dibujo gráfico para pintar líneas, arcos, claquier típo de polígono, etc. Podemos echar un vistazo rápido al conjunto de instrucciones que trae en multitud de páginas web, <a href="https://developer.mozilla.org/en/Canvas_tutorial">como por ejemplo esta</a>.</p>
+
+<p>Así que antes de empezar, vamos a comentar un poco sobre lo que nos interesa saber del canvas. Un canvas no es más que un montón de píxeles dispuestos en forma rectangular. Cada píxel está definido con dos coordenadas, su posición X, y su posición Y. El eje (0,0) es el vértice superior izquierdo del canvas. El eje X se incrementa hacia la derecha, y el eje Y hacia abajo. Los atributos más utilizados de un canvas son su contexto, su ancho y su alto. Su ancho y su alto son obvios, determinan el número de píxeles que tienen de anchura y de altura. El contexto es un concepto más avanzado, pero de forma resumida sirve para decirle a javascript qué repertorio de intrucciones de dibujo gráfico debe utilizar para pintar en el canvas, ya que son diferentes entre ellos. Nosotros usaremos el contexto <code>2d</code>, que es el más sencillo de aprender, pero que por contra, utilizará sólo la CPU para dibujar en pantalla. Pero de momento, eso no nos importa, nuestro juego es muy sencillo e irá rapidísimo en cualquier PC. Tambien existe otro contexto llamado <code>experimental-webgl</code>, ó <code>webgl</code> cuando deje de ser experimental, que sirve para hacer que la tarjeta gráfica se encarge de realizar los cálculos necesarios para dibujar en pantalla, posibilitando así mundos en 3D muy complejos que cualquier CPU se ahogaría si intentara gestionar.</p>
+
+<h2 id="entidades-del-juego-primer-vistazo">Entidades del juego, primer vistazo</h2>
+
+<p>Como comenté antes, lo primero que hice fue identificar qué componentes o entidades necesitaba para dar forma al juego. Necesito una entidad que represente a las naves alienígenas, que programaré como simples rectángulos blancos que se van moviendo en zigzag desde la parte superior de la pantalla hacia la inferior. También necesito una entidad que represente a la nave del jugador, que será otro rectángulo, verde, que sólo se puede mover de derecha a izquierda en la parte inferior de la pantalla. Por último necesito representar también los disparos, asi que será otra entidad rectangular de color amarillo, que sólo puede moverse verticalmente de abajo a arriba en cuanto el jugador dispare.</p>
+
+<p>De momento tengo bastante claras las entidades dibujables. Pero me estoy dando cuenta de que todas ellas tienen muchas cosas en común. Es una buena oportunidad para aplicar herencia, ahorrándome mucho trabajo y código repetitivo. De momento sólo quiero dibujar en pantalla una imagen estática de todas las naves alienígenas y el jugador, sin movimiento de ninguna clase. De todo lo demás, me olvido por el momento. ¿Cómo lo hacemos? Pues bien, creando una clase padre <strong>Entity</strong>, y tres clases hijas: <strong>Alien</strong>, <strong>Player</strong>, y <strong>Shot</strong>.
+Veámos qué aspecto tiene la primera versión de la clase <strong>Entity</strong>:</p>
+
+<pre><code class="language-javascript">'use strict'
+class Entity {
+    constructor(x, y, width, height, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+    }
+}
+</code></pre>
+
+<p>Como comenté antes, todas las entidades son en realidad rectángulos de colores. Hay varias formas de representar un rectángulo en una estructura de datos, como por ejemplo, mantener una lista con sus cuatro coordenadas, y luego ir dibujando las lineas entre cada par de coordenadas, para finalmente rellenar todo el área que forman de un color. Ello requeriría de por lo menos 6 líneas de código para dibujarlo en pantalla. ¿Hay otra forma más rápida? Sí. Viendo el tutorial de canvas que puse antes, se puede ver que existe una función, <em>fillRect</em>, que dibuja rectángulos en una sola línea. Fill significa &ldquo;rellenar&rdquo;, asi que esa instrucción lo que hace es pintar el área que forma un rectángulo con el último color de relleno especificado. Éso es justo lo que necesito. Veo que la función necesita 4 parámetros: Una coordenada <em>x</em>, una coordenada <em>y</em> (de su vértice superior izquierdo), un <em>width</em>, ancho, y un <em>height</em>, alto. Así que esos atributos son los que meto a mi clase <strong>Entity</strong>, de momento. Además, añado otro atributo para almacenar su color. El <em>constructor</em> simplemente recibe todos esos argumentos, y los guarda en sus respectivos atributos. JavaScript no lo permite, pero tenemos que tener en mente que esta clase es abstracta, es decir, jamás se declararán instancias de ella, sólo se instanciarán sus hijos.</p>
+
+<p>¿Y qué código tienen esas clases hijas? Pues veámoslas. <strong>Shot</strong> de momento la dejo fuera. Cuando seamos capaces de disparar, nos pondremos con ella. Las otras, <strong>Alien</strong> y <strong>Player</strong> tienen este primer aspecto:</p>
+
+<pre><code class="language-javascript">'use strict'
+class Alien extends Entity {
+    constructor(x, y) {
+        super(x, y, 40, 25, 'white');
+    }
+}
+</code></pre>
+
+<p>Y en otro archivo:</p>
+
+<pre><code class="language-javascript">'use strict'
+class Player extends Entity {
+    constructor(x, y) {
+        super(x, y, 40, 25, 'green');
+    }
+}
+</code></pre>
+
+<p>Caramba, además de heredad todos los métodos y atributos de <strong>Entity</strong>, sólo declaran un <em>constructor</em>, que tiene como argumento la coordenada donde están colocados. Bueno, fijándonos bien, vemos que lo poco que hacen es una llamada al constructor del padre, diciéndole con qué ancho, alto y color deben dibujarse. Y ya está. El color tiene que tener el formato típico de la web. Puede ser escrito directamente, <code>yellow</code>, o estilo hexadecimal <code>#1234ab</code>, RGB <code>rgb(100,255,0)</code>, RGBA <code>rgba(100,255,0,0.7)</code> o incluso HSL <code>hsl(230,50%,10%)</code>. Si tienes alguna duda con alguno de ellos, consulta alguno de los varios millares de tutoriales que hay pululando por la red. Fácil, ¿no?</p>
+
+<h2 id="renderizado">Renderizado</h2>
+
+<p>Nuestras clases de momento son sólo DTOs, Data Transfer Objects, clases que sólo contienen atributos que sirven como medio de comunicación entre otras clases, así que&hellip; ¿quién las dibuja en la pantalla? ¿No debería estar el código de dibujo, dentro de la clase? Ésta es una pregunta razonable, con una respuesta difícil. Sí, podría estar dicho código dentro de la clase, pero entonces estaríamos acoplando el juego, a la vista. Eso me impediría que algún día pueda cambiar la forma de dibujar el juego, es decir, renderizarlo, a por ejemplo WebGl. o incluso a texto ASCII y jugarlo en cualquier terminal.</p>
+
+<p>¿Dónde metemos ese renderizado entonces? La respuesta en POO es obvia: En una clase de render. <strong>Render2D</strong>, por ejemplo.</p>
+
+<pre><code class="language-javascript">'use strict'
+class Render2D {
+    constructor(id, width, height, color) {
+        this._canvas = document.getElementById(id);
+        this._canvas.width = width;
+        this._canvas.height = height;
+        this._canvas.style.backgroundColor = color;
+        this._ctx = this._canvas.getContext('2d');
+    }
+
+    clear() {
+        this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    }
+
+    entity(entity) {
+        this._ctx.fillStyle = entity.color;
+        this._ctx.fillRect(entity.x, entity.y, entity.width, entity.height);
+    }
+}
+</code></pre>
+
+<p>En esta clase centraremos toda la lógica del dibujado del juego. Si el lenguage lo permitiera, contaría con una interfaz, para poder implementarla en mis clases de render y poder cambiar la instancia de renderizado de forma muy rápida. En Javascript no existe ese concepto, aunque debemos de realizar la clase con esa misma idea: sus métodos públicos deberán ser exactamente iguales. Su constructor acepta un identificador, el del elemento canvas de la parte <em>HTML</em>. Como esta clase tiene la responsabilidad de dibujar, es también la encargada de gestionar el dónde. Así que le establecemos el típico ancho y alto de los minijuegos, pintamos el fondo de algún color, y guardamos en un atributo su contexto, para acceder a él directamente.</p>
+
+<p>Aunque ahora es una tontería, no quiero que pase desapercibido lo de pintar el fondo de negro. Tenía dos opciones: Dibujar el fondo de negro con otro <em>fillRect</em> del canvas, para pintar después todas las entidades, o ponerle un color negro en el HTML, lo cual es perfecto porque el fondo siempre estará debajo de lo que pinte en el canvas. Ésto último es mucho más rápido, ya he aprovechamos el CSS de HTML (aunque establecido con javascript) para ahorrarnos código de dibujo gráfico, que es más lento de ejecutar (y que además tendría que hacerlo en cada &ldquo;vuelta&rdquo; del bucle principal). Lo que quiero señalar es que no perdais de vista de que estamos programando juegos dentro de una página web, por lo que hay que aprovechar todas las alternativas que nos brinda HTML y CSS, que muchas veces son menos costosas que hacerlas con funciones de dibujo gráfico.</p>
+
+<p>El único método que de momento tiene, es el que se encarga de dibujar una entidad pasada como argumento. Como comenté antes, necesitamos especificar un color de relleno, en el atributo <em>fillStyle</em> del objeto contexto. Luego llamamos a <em>fillRect</em> con los atributos adecuados, y vualá, tenemos dibujado el rectángulo.</p>
+
+<p>Y aunque en esta fase del juego en realidad no lo necesitamos, metemos un método para borrar todo el contenido del canvas, <em>clear</em>. Será útil cuando las entidades se muevan, si no queremos que todo el juego quede emborronado. Este método hará un <em>clearRect</em> sobre el objeto contexto del canvas, a todo el área visible.</p>
+
+<h2 id="la-clase-juego-primera-versión">La clase Juego, primera versión</h2>
+
+<p>Una vez que tenemos definidas las entidades, y la forma en la que van a ser dibujadas en pantalla, tenemos que programar alguna clase que las utilice siguiendo algún tipo de lógica, para crear el juego. Esa clase asombrosamente la llamaremos <em>Game</em>. Nuestra clase juego tendrá que manejar todas las entidades involucradas en una partida, declarándolas y usándo sólo sus métodos (concretamente los públicos, aunque como dije en la primera parte, en javascript mediante clases de momento no tenemos forma de simular métodos privados). Esta clase será la que contenga el bucle principal del juego, pero de momento sólo se encargará de crear las entidades y mostrarlas quietas en pantalla. Pero&hellip; ¿dónde las mostramos? Es hora de ver la una versión primitiva de la página web donde se ejecutará el juego:</p>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;Space Invaders Tutorial 01&lt;/title&gt;
+        &lt;script type=&quot;text/javascript&quot; src=&quot;js/Entity.js&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot; src=&quot;js/Player.js&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot; src=&quot;js/Alien.js&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot; src=&quot;js/Game.js&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot; src=&quot;js/Render2D.js&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            'use strict'
+            window.addEventListener('load', function() {
+                let game = new Game('main');
+                game.init();
+            });
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;canvas id=&quot;main&quot;&gt;&lt;/canvas&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Aún no hemos visto nada de la clase Juego, pero el poco javascript que contiene la página principal se puede entender perfectamente. Para empezar, cargamos los scripts que tenemos hasta el momento en archivos separados, y luego añadimos el listener que será ejecutada cuando cargue la página mediante una llamada en el <em>load</em> del objeto nativo <strong>window</strong>. El HTML sólo contiene un elemento CANVAS donde vamos a dibujar el juego, sin ninguna clase de atributos. Se los dimos con la clase <strong>Game</strong>, con javascript.</p>
+
+<p>Al cargar, creamos una instancia de la clase <strong>Game</strong>. El constructor del juego sólo necesita un argumento, el id del canvas donde dibujar. Ya vimos antes qué es lo hace con él. A continuación, iniciaremos el juego. ¿Por qué un método <em>init</em>, en vez de hacerlo todo en el controlador? En este caso, el motivo es que la partida se terminará en algún momento, así que me interesa tener algún método que la empiece de nuevo, así que me he anticipado y lo he metido ya.</p>
+
+<p>Y por fin, veámos la versión alpha v0.0.1 de la clase Juego:</p>
+
+<pre><code class="language-JavaScript">'use strict'
+class Game {
+    constructor(id) {
+        this._renderer = new Render2D(id, 800, 600, 'black');
+    }
+
+    init() {
+        this._player = new Player(370, 550);
+        this._aliens = [];
+        for (var row = 0; row &lt; 5; row++) {
+            for (var column = 0; column &lt; 12; column++) {
+                this._aliens.push(
+                    new Alien(100 + column * 50, 50 + row * 30)
+                );
+            }
+        }
+        this._render();
+    }
+
+    _render() {
+        this._renderer.clear();
+        this._renderer.entity(this._player);
+        this._aliens.forEach(alien =&gt; this._renderer.entity(alien));
+    }
+}
+</code></pre>
+
+<p>Su constructor es básico, simplemente creamos la clase render para usarla cuando se necesite.</p>
+
+<p>El método init tiene algo mas de chicha. Para empezar, creamos una instancia de la clase <strong>Player</strong> y la posicionamos en la coordenada (370, 550), que recordemos que es donde irá el vértice superir izquierdo del rectángulo. Es decir, lo pondremos abajo del todo y casi en el centro de la pantalla.</p>
+
+<p>A continuación hacemos un bucle anidado para intanciar  y añadir los aliens a su propia colección.</p>
+
+<p>El bucle es muy sencillo de hacer. Queremos 5 filas de aliens, y cada fila estará compuesta por 12 naves. Sabemos que cada alien ocupa 40 píxeles de ancho y 25 de alto, como pusimos en su constructor. Quiero dejarle a cada nave un margen de 5 píxeles por la izquierda, 5 píxeles por la derecha, y 5 píxeles por abajo, lo que hace un total de 50x30 píxeles de superficie para cada alien. 50 píxeles x 12 aliens = 600 píxeles de anchura cada fila de enemigos, y sabiendo que el canvas mide 800x600, para centrarlos tengo que dejar 100 píxeles a cada lado. Con esos datos, ya puedes deducir la fórmula que utilizo en el bucle para posicionar correctamente todos los aliens. Conforme los creo llamo a su constructor, pasándole las coordenadas que acabo de calcular, los meto en la lista de entidades, y por último, incremento el contador de aliens en una unidad.</p>
+
+<p>Y así, ya tengo todas las entidades del juego iniciadas y posicionadas correctamente.</p>
+
+<p>Sólo nos queda pintar las entidades, que es una de las tareas principales (de momento la única) del futuro bucle principal del juego: El método <strong>render</strong> será quien dibuje todo el estado del juego en pantalla, incluído una primitiva interfaz gráfica por ejemplo para la puntuación, y por supuesto, el mapa, el jugador, y a t dodos los aliens. Para ello sólo tiene que recorrer la lista de aliens, como dijimos no hace mucho, y llamar al método adecuado del objeto <strong>Render2D</strong>. Cada vez que se dibuje en el canvas, lo hará sobre cualquier cosa que se haya pintado previamente, por lo que antes deberíamos limpiarlo (vaciarlo). Bueno, realmente nuestras entidades no se mueven, siempre estarán en el mismo sitio, asi que las entidades de la lista siempre se pintarán en los mismos sitios, con lo que no haría falta limpiar el canvas. Pero ésto sólo es una situación temporal, por lo que sí, debemos limpiar el canvas para que posteriormente, el juego se vea bien.</p>
+
+<p>Como nota al pie, para renderizar los alines he usado una <a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Funciones/Arrow_functions">función flecha</a> sobre un método iterador del array, típicos de la programación funcional. El equivalente a la programación clásica sería:</p>
+
+<pre><code class="language-JavaScript">//Forma básica sin iterador y sin función flecha
+for (alien in this._aliens) {
+    this._renderer.entyty(alien);
+}
+
+//Con sólo el iterador
+let self = this;
+this._aliens.forEach(
+    function(alien) {
+        self._renderer.entyty(alien);
+    }
+);
+</code></pre>
+
+<p>Y con ésto, ya tenemos algo que mostrar en pantalla. ¿A que tal y como dije, ver cosas dibujadas os ha subido la moral? Veremos cómo hacer que se muevan en el próximo capítulo.</p>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+

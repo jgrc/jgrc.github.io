@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="Juan Gabriel Rodríguez Carrión">
+
+<meta name="description" content="">
+
+<title>Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</title>
+<meta name="generator" content="Hugo 0.53" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="/css/theme.min.css" rel="stylesheet" type="text/css">
+<link  href="/css/custom.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    
+    <h3 class="home-link"><a href="">JGRC Blog</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">JGRC Blog - Posts mas recientes</h3>
+        <ul>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-03/">Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-02/">Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-01/">Tutorial canvas 2D - Cómo hacer un juego en javascript 1ª parte</a></li>
+            
+            <li><a href="/about/">Sobre el autor</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="tags" class="open">
+        <h3 data-open="tags">Tags</h3>
+        <ul class="tags">
+            
+            <li><a href="/tags/canvas">canvas</a></li>
+            
+            <li><a href="/tags/console">console</a></li>
+            
+            <li><a href="/tags/dise%C3%B1o">diseño</a></li>
+            
+            <li><a href="/tags/evento">evento</a></li>
+            
+            <li><a href="/tags/javascript">javascript</a></li>
+            
+            <li><a href="/tags/space-invaders">space-invaders</a></li>
+            
+            <li><a href="/tags/sprites">sprites</a></li>
+            
+            <li><a href="/tags/teclado">teclado</a></li>
+            
+            <li><a href="/tags/tiempo-delta">tiempo-delta</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="categories" class="open">
+        <h3 data-open="categories">Categorías</h3>
+        <ul class="categories">
+            
+            <li><a href="/categories/tutorial-juego-canvas-2d">tutorial-juego-canvas-2d</a></li>
+            
+        </ul>
+    </div>
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</h1>
+<h4>Publicado en 2019-01-20 17:30:00</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="/posts/canvas-2d-game/tutorial-03/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<p>Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la <a href="/posts/canvas-2d-game/tutorial-02/">lección anterior</a> vimos cómo crear las entidades que necesita el juego mediante herencia de los atributos y métodos en común, y cómo empezar a dibujar el juego en la pantalla. Es hora de hacer que los aliens y el jugador se muevan un poco.</p>
+
+<p><img align="left" src="/img/posts/canvas-2d-game/tutorial-02.png" alt="Tutorial 02" title="Tutorial 02" style="padding: 10px;" /></p>
+
+<p><a href="/code/posts/canvas-2d-game/tutorial-03/">Aquí</a> puedes correr la versión del juego que vamos a detallar en este artículo.</p>
+
+<h2 id="el-tiempo-delta">El tiempo delta</h2>
+
+<p>Para empezar a mover las entidades por el mapa, vamos a tener que utilizar una técnica muy usada: El <a href="http://es.wikipedia.org/wiki/Delta_T">tiempo delta</a>. Los novatos normalmente cometen el error de animar las entidades con un valor constante, por ejemplo, 10 píxeles a la izquierda. Entonces, en cada vuelta del bucle, las entidades siempre se moverán 10 píxeles. Así es como se hacían los videojuegos antiguos, como en los <em>486</em> o los primeros <em>Pentium I</em>. Ese bucle, además del movimiento, también se encargará de dibujar en pantalla, detectará colisiones, y demás tareas de la lógica del juego. En último lugar, hará un <em>sleep</em> o algo parecido, para hacer que el juego funciona a 30 o 40 FPS. Por ejemplo, si queremos que el juego corra a 30 FPS, el sleep será de 1000ms / 30FPS = 34 ms. Pero ese método presentaba un problema muy importante: Los ordenadores potentes ejecutarán la lógica del juego más rápidamente. Imaginemos que un ordenador potente ejecuta la lógica en 3 milisegundos, y uno malo en 10 milisegundos. Entonces los FPS reales del ordenador bueno serán 1000ms / (34ms + 3ms) = 27 FPS, y el ordenador malo 1000ms / (34ms + 10ms) = 22 FPS. Una diferencia notable de rendimiento: en el ordenador malo, el juego irá mas lento.</p>
+
+<p>¿Cómo podemos hacer que el juego corra mas o menos igual en toda clase de PC&rsquo;s? Tiempo delta al rescate.</p>
+
+<p>El tiempo delta consiste en guardar el número de milisegundos transcurrido desde la última ejecución del bucle en una variable. Las entidades, en vez de moverse una cantidad fija en cada vuelta del bucle, lo que hacen es moverse una cantidad de píxeles por segundo. Al multiplicar el tiempo transcurrido desde la última vuelta por la velocidad de la entidad, obtenemos los píxeles que debe moverse realmente la entidad en esa vuelta. Con esta simple técnica, podemos garantizar que el juego funcionará a la misma velocidad en toda clase de ordenadores, sean potentes o no. En los ordenadores potentes, la animación se verá mas fluída que en los ordenadores menos potentes, y ya no es necesario hacer ningún tipo de <em>sleep</em>. El tiempo delta estará en un atributo de la clase que se encargue del bucle principal, como veremos enseguida.</p>
+
+<h2 id="el-movimiento-de-los-aliens">El movimiento de los aliens</h2>
+
+<p>Los aliens tienen un movimiento particular. Van de derecha a izquierda, y cuando llegan al límite, bajan un poco y cambian de dirección. Y lo hacen todos a la vez. ¿Cómo podemos representar esta lógica en el juego? Pues repartiendo las responsabilidades entre varias clases.</p>
+
+<p>Todas las entidades pueden moverse, no solo los aliens. Por tanto, el lugar ideal para meter los atributos y métodos relacionados con el movimiento básico es en la clase padre <em>Entity</em>. El código que sea idéntico a lo que ya vimos en el tutorial anterior, no lo incluiré:</p>
+
+<pre><code class="language-javascript">'use strict'
+class Entity {
+    constructor(x, y, dx, dy, width, height, color) {
+        // ...
+        this.dx = dx;
+        this.dy = dy;
+        // ...
+    }
+
+    move(delta) {
+        this.x += Math.round(delta * this.dx / 1000);
+        this.y += Math.round(delta * this.dy / 1000);
+    }
+}
+</code></pre>
+
+<p>Junto con los atributos que ya teníamos, declaramos dos más: <em>dx</em> y <em>dy</em>. Contendrán la velocidad en píxeles por segundo que tiene la entidad en el eje X y en el eje Y. Pueden ser valores positivos o negativos. Si por ejemplo, <em>dx</em> es positiva, el atributo <em>x</em> crecerá, lo que quiere decir, que nos estamos moviendo a la derecha. Si es negativo, restará, por lo que nos moveremos a la izquierda. Con <em>dy</em> igual, pero hacia abajo y hacia arriba, según sume o reste.</p>
+
+<p>El método <em>move</em> que las moverá, recibirá el tiempo delta transcurrido desde el último movimiento, asi que calcular la distancia a la que debe moverse cada coordenada de la entidad, es trivial.</p>
+
+<pre><code class="language-javascript">'use strict'
+class Alien extends Entity {
+    constructor(x, y) {
+        super(x, y, 75, 0, 40, 25, 'white');
+        this.initialVelocity = 75;
+    }
+
+    changeDirection() {
+        this.dx *= -1;
+        this.y += 10;
+    }
+}
+</code></pre>
+
+<p>Los aliens se mueven inicialmente hacia la derecha. Asíque como <em>dx</em> inicial le asigno por ejemplo una velocidad de <code>75</code> píxeles por segundo. Cuando alcanzan el límite del mapa, descienden un poquito y se mueven en sentido contrario. Con el método <em>changeDirection</em>, aplicamos dicho cambio.</p>
+
+<p>Pero un momento. ¿Cómo sabemos si el alien ha llegado al límite? U otro problema. ¿Cómo podemos hacer que todas los aliens actúen en bloque?
+Esa lógica la controlará nuestra clase principal <strong>Game</strong>.</p>
+
+<pre><code class="language-javascript">'use strict'
+class Game {
+    // ...
+    init() {
+        // ...
+        this._time = Date.now();
+        this._loop();
+    }
+
+    _loop() {
+        this._gameLogic();
+        this._update();
+        this._render();
+        window.requestAnimationFrame(() =&gt; this._loop());
+    }
+
+    _gameLogic() {
+        this._aliens.forEach(alien =&gt; this._alienInMapLimit(alien));
+    }
+
+    _alienInMapLimit(alien) {
+        if (alien.dx &lt; 0 &amp;&amp; alien.x &lt; 10 || alien.dx &gt; 0 &amp;&amp; alien.x &gt; 790 - alien.width) {
+            this._aliens.forEach(alien =&gt; alien.changeDirection());
+        }
+    }
+    // ...
+    _update() {
+        let delta = this._delta();
+        this._aliens.forEach(alien =&gt; alien.move(delta));
+    }
+
+    _delta() {
+        let now = Date.now();
+        let delta = Math.min(now - this._time, 100);
+        this._time = now;
+
+        return delta;
+    }
+    // ...
+}
+</code></pre>
+
+<p>La idea es que vamos a dividir la gestión del juego en tres pasos: Calcular la lógica del juego (órdenes del jugador, colisiones, etc), realizar los movimientos, y dibujarlos en pantalla. Los métodos equivalentes son <em>_gameLogic</em>, <em>_update</em>, y <em>_render</em>. Todos estos métodos serán llamados desde el blucle principal del juego, llamado <em>_loop</em>. El bucle principal es de momento un blucle infinito. Para conseguir un bucle infinito en javascript, sin bloquear el navegador (olvídate de un <code>while (true) { }</code>), tenemos las opciones de usar un <em>setInterval</em>, <em>setTimeout</em>, y la mejor, <em>window.requestAnimationFrame</em>. Esta última tiene la ventaja de que optimiza el control del bucle infinito, evitando que el navegador colapse, y <strong>pausando dicho bucle</strong> si entiende que el usuario que está navegando, ha cambiado de pestaña o no está usando el navegador.</p>
+
+<p>Volvamos a los aliens. Su lógica consite en cambiar de dirección y bajar un poco cuando alcanzan uno de los límites del mapa. Encapsulo toda esa lógica condicional en el método <em>_alienInMapLimit</em>, y hago que <em>_gameLogic</em> la vaya llamando por cada alien. Nota que cuando un alien cualquiera alcance el límite, provocará el <em>alien.changeDirection</em> a todos los demás. Como al hacerlo, sus respectivos <em>dx</em> cambiarán, me garantiza que el alien que tengo justo debajo del que acaba de cumplir la condición, no la cumpla cuando le toque a él dicha evaluación.</p>
+
+<p>Con este chequeo, ya tenemos la velocidad adecuada seteada en cada alien. Ahora toca moverlos, para que aplique esa velocidad, a su coordenada correspondiente. El método <em>_update</em> se encargará de todo. Lo primero que hace es calcular el tiempo delta, que como dijimos anteriormente, no es mas que calcular el tiempo transcurrido desde la última ejecución del bucle principal. A continuación, me basta con ejecutar el <em>move</em> de cada alien pasándole el tiempo delta.</p>
+
+<p>Es importante destacar que al calcular el tiempo delta, le metemos como máximo un 100 (milisegundos). ¿Por qué? Pues la razón medio la mencioné antes en negrita y todo: Si el usuario cambia de pestaña, o cambia de aplicación, el navegador pausará el bucle. Cuando vuelva, lo continuará, pero el tiempo transcurrido puede que esté en el orden de segundos o incluso minutos. Eso puede ser un desastre, si ordenamos que las entidades se muevan tanto tiempo de golpe. Para evitarlo, basta con ese simple límite. Cuando el navegador retome, como máximo el tiempo delta calculado será de 100 milisegundos. Normalmente, este tiempo está entre los 3 y los 10 milisegundos, dependiendo de la potencia de tu PC.</p>
+
+<p>Y con ésto, de momento ya ternemos todos los aliens bailando por la pantalla. Cuando lleguen a la zona del jugador, continuarán su viaje hasta el infinito, porque no tenemos ningun código que lo evite. Ya llegaremos a eso en un próximo tutorial.</p>
+
+<p>Veámos que pasa con el jugador.</p>
+
+<h2 id="eventos-de-teclado-y-notificaciones-de-movimiento">Eventos de teclado y notificaciones de movimiento</h2>
+
+<p>Como te puedes imaginar, es una entidad especial. La nave del jugador responde a las órdenes del jugador, y éste las dará a través del teclado, usando los cursores, que es la forma más intuitiva de la que podemos echar mano. ¿Qué quiere decir esto? Acertaste, que necesitamos una clase Keyboard que se coma el marrón y que no me ensucie el resto de mi precioso juego.</p>
+
+<pre><code class="language-javascript">'use strict'
+class Keyboard {
+    constructor() {
+        this._element = document.body;
+        this._pressed = {};
+        this.addEvent('keydown', evt =&gt; this._pressed[evt.keyCode] = true);
+        this.addEvent('keyup', evt =&gt; this._pressed[evt.keyCode] = false);
+    }
+
+    addEvent(event_name, callback) {
+        this._element.addEventListener(event_name, callback);
+    }
+
+    is(key) {
+        return !!this._pressed[key];
+    }
+
+    static get Key() {
+        return {
+            ESC : 27,
+            F1 : 112,
+            // ...
+            DEL : 8
+        }
+    }
+}
+</code></pre>
+
+<p>La clase es bastante sencilla. Declara un mapa con los key codes (número ascii) de cada caracter del teclado, para que luego sea mas descriptivo cuando se haga una referencia a dicha tecla. Por ejemplo, la letra A sería <code>Keyboard.Key.A</code>. Para detectar la pulsación de teclas, la idea es meter en un array asociativo gigante, si una tecla concreta está siendo pulsada en el mmomento de preguntar mediante el método <em>is</em>. Ese array asociativo es el atributo <em>_pressed</em>. Escuchando los eventos <code>keydown</code> y <code>keyup</code>, que son disparados al pulsar y al soltar una tecla, resolvemos el problema. Además se permite que desde fuera de la clase se declaren nuevos eventos mediante <em>addEvent</em>, por si el cliente de la clase quiere ejecutar alguna acción especial en cuando se detecta una pulsación, en vez de realizarla &ldquo;en diferido&rdquo; mediante el <em>is</em>.</p>
+
+<p>Y en esto último está la diferencia: Notificación VS Ejecución. Si hiciéramos que el juego reaccionara directamente al pulsar una tecla, perderíamos un poco el control de lo que pasa y costaría bastante más gestionar el control del jugador y la interacción con el juego. Por ejemlplo, si consigo pulsar 10 veces el cursor izquierda en una milésima de segundo, provocaría que el jugador se moviera 10 veces. ¿Y cómo lo muevo, si el tiempo delta es calculado en cada vuelta del bucle? Este tipo de consecuencias no me interesa gestionarlas. Prefiero usar la técnica de la notificación. El jugador le notifica al juego que el jugador ha pulsado una tecla. Y el juego, cuando pueda, hará lo que se espera que haga cuando se solicita esa acción. Con esta simple idea, por ejemplo, ya tengo resuelto el problema de que el jugador mantenga una tecla presionada todo el tiempo.</p>
+
+<p>Pero a veces, sí me interesa que el juego reaccione en cuanto se pulsa una tecla. Por ejemplo, el típico presionar <code>escape</code> para salir del juego. Por ello, la clase <strong>keyboard</strong> proporciona el método <em>addEvent</em>, y que el cliente gestione sus propios eventos de teclado a través de esta clase.</p>
+
+<h2 id="el-jugador">El jugador</h2>
+
+<p>El jugador es el principal interesado en los eventos del teclado, como es natural. La nave del jugador puede moverse de derecha a izquierda, y disparar. De momento, nos quedaremos sólo con el movimiento.</p>
+
+<pre><code class="language-javascript">'use strict'
+class Player extends Entity {
+    constructor(x, y) {
+        super(x, y, 0, 0, 40, 25, 'green');
+        this.velocity = 120;
+    }
+
+    stop() {
+        this.dx = 0;
+    }
+
+    toRight() {
+        this.dx = this.velocity;
+    }
+
+    toLeft() {
+        this.dx = -this.velocity;
+    }
+}
+</code></pre>
+
+<p>Al igual que con los aliens, le metemos a la clase <strong>Player</strong> los métodos mas sencillos para gestionar su movimiento. El jugador puede moverse a la derecha y moverse a la izquierda, ha una velocidad determinada. Al igual que con los aliens, me basta indicar su <em>dx</em> para que el método <em>move</em> del padre haga lo que tenga que hacer. Pero hay una novedad: Si el jugador no pulsa ninguna tecla, la nave no debe moverse. Para ello hemos metido el <em>stop</em>.</p>
+
+<p>Veámos ahora qué cambia en la clase principal del juego.</p>
+
+<pre><code class="language-javascript">'use strict'
+class Game {
+    // ...
+    _gameLogic() {
+        // ...
+        this._playerMovement();
+    }
+
+    _playerMovement() {
+        this._player.stop();
+        if (this._keyboard.is(Keyboard.Key.LEFT) &amp;&amp; this._player.x &gt; 10) {
+            this._player.toLeft();
+        }
+        if (this._keyboard.is(Keyboard.Key.RIGHT) &amp;&amp; this._player.x &lt; 790 - this._player.width) {
+            this._player.toRight();
+        }
+    }
+
+    _update() {
+        let delta = this._delta();
+        // ...
+        this._player.move(delta);
+    }
+}
+</code></pre>
+
+<p>Como se puede ver, poca cosa. Es la magia de repartir la funcionalidad entre las distintas clases, y tener un diseño previo decente. En la lógica del juego, ahora también estará antento al teclado, chequeando si la tecla esperada está siendo pulsada en ese momento. Si lo está, y el jugador no está en el límite del mapa, se procederá indicarle a la clase <strong>Player</strong> cómo tiene que moverse en la próxima llamada a su <em>move</em>, que se hará en el <em>_update</em>, como con los aliens. Para resetear el posible movimiento anterior que pudiera tener el jugador, <em>_playerMovement</em> empieza por un <em>stop</em>, como dijimos antes. Es una mierdecilla que no me gusta, seguro que pensando un poco más, idee una forma donde tal orden no sea necesaria; pero tampoco me quitará el sueño.</p>
+
+<p>Y ya está bien por el momento, si ejecutamos el juego en su estado actual, conseguiremos que las naves alienígenas se muevan en zigzag desde arriba hasta desaparecer por abajo de la pantalla; y que la nave protagonista responda a las pulsaciones de teclas que haga el jugador. Sólo nos queda poder disparar a nuestro gusto, que los disparos destruyan a las naves alienígenas (lo que nos servirá para introducirnos en el maravilloso mundo de la detección de colisiones), y saber cuándo se ha acabado la partida para mostrar algun texto en la pantalla. ¡Hasta la próxima!</p>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+

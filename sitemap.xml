@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/posts/canvas-2d-game/tutorial-03/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/canvas-2d-game/tutorial-02/</loc>
+    <lastmod>2019-01-19T20:30:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/canvas-2d-game/tutorial-01/</loc>
+    <lastmod>2019-01-19T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/</loc>
+    <lastmod>2019-01-18T17:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/canvas/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/console/</loc>
+    <lastmod>2019-01-19T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/dise%C3%B1o/</loc>
+    <lastmod>2019-01-19T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/evento/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/javascript/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/space-invaders/</loc>
+    <lastmod>2019-01-19T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/sprites/</loc>
+    <lastmod>2019-01-19T18:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/teclado/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/tiempo-delta/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/tutorial-juego-canvas-2d/</loc>
+    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

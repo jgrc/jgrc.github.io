@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="Juan Gabriel Rodríguez Carrión">
+
+<meta name="description" content="">
+
+<title>Tutorial canvas 2D - Cómo hacer un juego en javascript 1ª parte</title>
+<meta name="generator" content="Hugo 0.53" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+<link  href="/css/theme.min.css" rel="stylesheet" type="text/css">
+<link  href="/css/custom.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="page-container container-fluid">
+<div class="col-md-3 menu">
+    <nav class="col-md-3">
+    
+    <h3 class="home-link"><a href="">JGRC Blog</a></h3>
+    <div id="last-posts" class="open">
+        <h3 data-open="last-posts">JGRC Blog - Posts mas recientes</h3>
+        <ul>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-03/">Tutorial canvas 2D - Cómo hacer un juego en javascript 3ª parte</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-02/">Tutorial canvas 2D - Cómo hacer un juego en javascript 2ª parte</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-01/">Tutorial canvas 2D - Cómo hacer un juego en javascript 1ª parte</a></li>
+            
+            <li><a href="/about/">Sobre el autor</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="tags" class="open">
+        <h3 data-open="tags">Tags</h3>
+        <ul class="tags">
+            
+            <li><a href="/tags/canvas">canvas</a></li>
+            
+            <li><a href="/tags/console">console</a></li>
+            
+            <li><a href="/tags/dise%C3%B1o">diseño</a></li>
+            
+            <li><a href="/tags/evento">evento</a></li>
+            
+            <li><a href="/tags/javascript">javascript</a></li>
+            
+            <li><a href="/tags/space-invaders">space-invaders</a></li>
+            
+            <li><a href="/tags/sprites">sprites</a></li>
+            
+            <li><a href="/tags/teclado">teclado</a></li>
+            
+            <li><a href="/tags/tiempo-delta">tiempo-delta</a></li>
+            
+        </ul>
+    </div>
+    
+
+    
+    <div id="categories" class="open">
+        <h3 data-open="categories">Categorías</h3>
+        <ul class="categories">
+            
+            <li><a href="/categories/tutorial-juego-canvas-2d">tutorial-juego-canvas-2d</a></li>
+            
+        </ul>
+    </div>
+    
+</nav>
+
+</div>
+<div class="col-md-9 content">
+
+<h1>Tutorial canvas 2D - Cómo hacer un juego en javascript 1ª parte</h1>
+<h4>Publicado en 2019-01-19 18:00:00</h4>
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
+<script>!function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+    if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.src = p + '://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }
+}(document, 'script', 'twitter-wjs');</script>
+
+<div class="fb-share-button" data-href="/posts/canvas-2d-game/tutorial-01/" data-layout="button"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en-US/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<article>
+    
+
+<h2 id="introducción">Introducción</h2>
+
+<p>Bienvenidos al <em>remake</em> de mi primer tutorial sobre cómo realizar un pequeño juego en JavaScript, mas concretamente el tan viejo como popular <a href="http://es.wikipedia.org/wiki/Space_Invaders">Space Invaders</a>. Para programarlo, me fue de gran utilidad el <a href="http://www.cokeandcode.com/main/tutorials/space-invaders-101/">tutorial de Kevin Glass</a> sobre cómo programar videojuegos en Java, quien también escogió el Space Invaders como punto de partida. En su día, hace ya 8 años, hice una conversión de <em>Java</em> a <em>Javascript</em> mas o menos fiel, que aunque en el nombre de estos lenguajes ambos incluyen la palabra <em>java</em>, <em>JS</em> se parece a aquél tanto como un huevo a una castaña. Pero para este <em>remake</em> de mi viejo blog <strong>Experimentando en la web</strong>, he reordenado las ideas y reimplementado el juego de otra forma mas sencilla, a mi juicio.</p>
+
+<p>Aun así he subido el <a href="/code/old/canvas-2d-game/">juego original completo a este enlace</a>, por si alguien siente la misma nostalgia que yo. Además servirá para ver el resultado final de lo que vamos a ver en esta serie de tutoriales.</p>
+
+<p>Para quien tenga la desgracia de no conocer el videojuego original, de la edad de oro de las recreatívas arcades, el juego trata sobre una invasión alienígena que el protagonista, una nave que sólo puede moverse de izquierda a derecha y disparar hacia arriba, debe evitar. Las naves alienígenas se van moviendo todas juntas y en zigzag desde la parte superior de la pantalla a la parte inferior, donde se encuentra el protagonista. El jugador debe destruir todas las naves antes de que lo alcancen, o perderá la partida.</p>
+
+<p><img align="left" src="/img/posts/canvas-2d-game/space-invaders.jpg" alt="Atari Space Invaders" title="Atari Space Invaders" style="padding: 10px;" /></p>
+
+<p>Estas lecciones están pensadas para personas con unos razonables conocimientos previos de programación, pero sin experiencia en el desarrollo de juegos en 2D. El objetivo que busco es que aprendais las rutinas básicas que se siguen, con una buena comprensión de lo que está ocurriendo en el código en cada momento. Debo añadir que yo tampoco era ni soy un experto en éste tema, y todo lo que he hecho aquí se basa en lo que he ido aprendiendo tanto con mi experiencia propia como de lo aprendido a travérs de códigos y tutoriales de otras personas. No me extrañaría que haya mejores soluciones que las que he tomado a la hora de afrontar los problemas que me han ido surgiendo mientras programaba el juego, por lo que si usas directamente el código, que sea bajo tu propio riesgo. Sin embargo, tampoco creo que esté del todo mal lo que he hecho. Por su sencillez, puede ser una muy buena forma de empezar a conocer este mundillo.</p>
+
+<p>Si mientras lees ésto ves que puedes mejorar algo, no dudes en dejar un comentario con tu punto de vista; es posible que incluso añada tus consejos a éste tutorial.</p>
+
+<h2 id="entorno-de-desarrollo">Entorno de desarrollo</h2>
+
+<p>Bien, empezamos con la chicha. ¿Qué herramientas se necesitan para la programación de un minijuego en JS? Pues muy poca cosa: Un simple editor de código, y un navegador. Nada más. Editas tu código <em>HTML</em> y <em>Javascript</em> con el editor, y abres el fichero html principal en un navegador. De esta forma tan simple, podrás correr todos los tutoriales de esta serie.</p>
+
+<p>Como editor web, suelo usar <a href="https://atom.io/">Atom Editor</a>, que es gratuíto y open-source. Antes usaba <a href="https://www.sublimetext.com/">Sublime Text</a>, que aunque es ligeramente mas rápido al arrancar, requiere pagar una licencia para poder usarlo para proyectos personales. Si no lo haces, al arrancar y cada X tiempo, te aparece una ventana donde te recuerda que debes apoquinar la licencia, aunque puedes seguir usándolo con el 100% de su funcionalidad. Supongo que los que también uséis Atom, os habrá sonado la plantilla de este blog.</p>
+
+<p>Como navegador web, vale cualquiera. Hoy en día los grandes navegadores ya son prácticamente idénticos en cuanto a funcionalidad y adaptación de los estándares de la web. Yo me he decantado por <a href="https://www.google.com/chrome/">Google Chrome</a>, ya que sus herramientas para programadores me enamoraron hace ya una década y ya no sé vivir sin ellas. Pero lo dicho, Firefox y Edge de microsoft tienen herramientas similares.</p>
+
+<h2 id="conceptos-básicos">Conceptos básicos</h2>
+
+<p>Antes de comenzar a picar código como posesos, voy a intentar explicar cómo funciona un videojuego a nivel general. Este puede ser muy sencillo de programar, como el popular Snake, o el Space Invaders. O por el contrario, puede ser extremadamente difícil, como cualquier juego de estrategia con muchas opciones, juego de rol, etcétera.</p>
+
+<p>Pero todos comparten como mínimo estos pilares básicos:</p>
+
+<ul>
+<li>Tienen un bucle principal que gestiona el juego.Tienen un bucle principal que gestiona el juego.</li>
+<li>Leen los eventos de teclado y/o de ratón para comunicar al juego las órdenes del jugador.</li>
+<li>Poseen algún tipo de modo gráfico.</li>
+<li>Usan algún tipo de algoritmo que gestiona la detección de colisiones.</li>
+</ul>
+
+<p>El modo gráfico que vamos a utilizar, como ya te estás imaginando, va a ser gráficos en un contexto 2D. Los primeros videojuegos eran sólo texto, donde las pantallas consistían en descripciones precisas sobre lo que el jugador estaba viendo, tras lo cual el jugador debía de escribir lo que quería hacer, como &ldquo;ir norte&rdquo;,  &ldquo;coger llave&rdquo;, o &ldquo;atacar goblin&rdquo;. Luegon llegaron las 2D, cuyos cálculos podía ser gestionados íntegramente con la CPU del ordenador; y finalmente llegó la revolución 3D, con las primeras tarjetas gráficas del mercado, que trasladaban a la GPU la infinidad de cálculos que conlleva dibujar un mundo en 3 dimensiones. En un contexto 2D, cualquier cosa a dibujar será un polígono. Cuanto más complejo sea el polígono, mejores &ldquo;físicas&rdquo; de detecciones de colisiones tendrá, pero también será mas difícil de programar.</p>
+
+<p>Hace una década, dibujar gráficos en HTML con JavaScript era una tortura de chinos, que encima no todos los navegadores podían interpretar. HTML5 proporcionó un nuevo elemento, CANVAS (lienzo), y una nueva remesa de instrucciones de dibujo gráfico para javascript, tanto en 2D, que usaremos aquí, como en 3D (WebGL). WebGL utiliza la tarjeta gráfica para pintar todo lo que se dibuja en la pantalla, así que es increíblemente más rápido (y complejo). Por el contrario, como ya mencionamos antes, al utilizar el contexto gráfico 2D sobre un elemento canvas, será la CPU quien se encargue de ejecutar todo el código de dibujo gráfico, además de el de la lógica, lo que puede ralentizar el juego si éste está muy sobrecargado de elementos dibujables. Por supuesto, se puede hacer que WebGL pinte un juego en 2D, mejorando mucho el rendimiento. Quizás ése sea el contenido de un futuro tutorial, pero de momento, lo haremos todo con la CPU. Nuestro Space Invaders no requiere de mucha potencia para poder ejecutarse correctamente.</p>
+
+<p>El bucle principal del juego se encargará de manejar absolutamente todo. En cada vuelta del bucle, se calcularán los movimientos de todas las naves alienígnenas, se leerá el teclado para saber si el jugador a pulsado alguna tecla, y se actuará en consecuencia; se detectarán también las colisiones que se produzcan (es decir, si dos objetos del juego chocan, como un disparo y una nave alienígen) y haciendo lo que se tenga que hacer. A todos estos quehaceres los llamaremos &ldquo;lógica del juego&rdquo;. Y por último, pero no menos importante, se pintará todo en pantalla. Debo aclarar que los pasos anteriores no hay por qué hacerlos en el orden en el que los he mencionado; y que por supuesto, pueden realizar mas tareas de las que he nombrado. Depende totalmente de la naturaleza del juego que quieras hacer, y de lo que necesita.</p>
+
+<p>Leer los eventos de teclado y/o de ratón no necesita mucha explicación. Es la forma más sencilla que tenemos para que el jugador pueda interactuar con el juego, aunque si tienes tiempo libre puedes dedicarlo a usar los sensores de movimiento típicos de la realidad virtual. En el mundo de los smartphones, podemos equiparar los gestos que hacemos con los dedos, con los eventos del ratón, ya que prácticamente son iguales: Pulsar, arrastrar, soltar.</p>
+
+<p>Para éste juego sólo usaremos cuatro teclas: Los cursores derecha e izquierda para el movimiento de la nave protagonista, el espacio, para disparar, y la tecla ENTER, para empezar o continuar una partida.</p>
+
+<p>El algoritmo de detección de colisiones frecuentemente suele ir muy ligado al modo gráfico que estemos usando. Para hacer más sencillo nuestro juego 2D, todos los polígonos a dibujar serán rectángulos. Cada nave alienígena es un rectángulo, la nave del jugador es un rectángulo, y los disparos son rectángulos mas pequeñitos. De esta manera sólo necesitaremos un sencillo algoritmo de detección de colisiones de rectángulos, para saber cuándo una bala a pegado a un enemigo, o cuando una nave enemiga ha chocado contra el jugador. Como te puedes imaginar, también puedes usar triángulos, líneas y círculos como polígonos, o una convinación de ellos, por ejemplo para construir cada nave enemiga, pero te podrás imaginar que implementar algoritmos de colisión entre ellos será sensíblemente mas difícil. Matemáticamente se puede detectar si un triángulo choca con un cuadrado, o de si un círculo está en colisión con una línea, pero los dos algoritmos mas sencillos de implementar son los de cuadrados con cuadrados, y círculos con círculos.
+<img align="left" src="/img/posts/canvas-2d-game/collision-sprite.png" alt="Colisión simple" title="Colisión simple" style="padding: 10px;" />
+Por eso es importante elegir bien un buen método de detección de colisiones desde el principio, y utilizar gráficos acordes al método de detección de colisiones que estemos utilizando. Los juegos profesionales en 2D, donde los personajes suelen ser imágenes , se suele utilizar ésta técnica: En el juego, se pinta la imagen, pero para calcular las colisiones, se utiliza un rectángulo que la envuelve. Sin embargo, el algoritmo detectará como colisión lo que se muestra la primera imagen de la izquierda, cuando realmente la zona que corresponde al cuerpo de los personajes, no están en contacto. El jugador que pierda la partida por ello se acordará de tu madre. Para solucionar ese problema, se suele utilizar esta mejora: para dibujar, se utiliza la imagen como antes, pero para calcular las colisiones, se mantiene además de la imagen, una lista de cuadrados cuya posición se aproxima a la geometría real del personaje que hay en la imagen, como podemos ver también en la imagen de la derecha. Si alguno de los rectángulos colisiona, se comunica que el personaje ha colisionado. Por supuesto, esos rectángulos para detectar colisiones no se dibujan en la pantalla.
+<img align="right" src="/img/posts/canvas-2d-game/collision-sprite-2.png" alt="Colisión simple" title="Colisión simple" style="width: 400px; padding: 10px;" />
+Hay otra técnica mas compleja basada en comprobar pixel a pixel si objetos contenidos en dos imágenes colisionan, pero es una forma muy costosa y que podría bajar el rendimiento del juego hasta hacerlo injugable.</p>
+
+<p>Pero como dije al principio, para nuestro primer intento de videojuego utilizaremos la detección de rectángulos por una razón: Es la más sencilla e increíblemente rápida de ejecutar si nuestros rectángulos no pueden rotar y siempre estarán perfectamente alineados en paralelo con el eje de coordenadas X e Y.</p>
+
+<h2 id="diseño-del-juego">Diseño del juego</h2>
+
+<p>Una vez conocemos a brocha gorda lo que se necesita para hacer funcionar nuestro minijuego, ya va siendo hora de entrar en materia: El código. Lo principal, es elegir un paradigma de programación sencillo y útil para representar las ideas. Con la que yo estoy familiarizado es mediante la programación orientada a objetos (POO), pero no habrá ningún problema si alguien está lo suficientemente zumbado como para implementarlo con programación funcional.</p>
+
+<p>Si nunca has programado bajo este paradigma, o no conoces bien cuáles son sun características principales, éste es un buen momento para que interrumpas la lectura de éste tutorial, y aprendas al menos los fundamentos en algúyn lenguaje particular, como <em>Java</em>. También puedes arriesgarte e intentar seguir este tutorial para aprender ambas cosas a la vez, quizás no sea tan complicado después de todo. Si sabes de qué va el paradigma <strong>POO</strong>, pero no sabes cómo se implementa en java, puedes echarle un <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes">vistazo a esto</a>.</p>
+
+<p>Como se puede ver en el link, las clases de Javascript en realidad no son clases. Por debajo serán convertidos a objetos de javascript, cuyo tipo de orientación a objetos va por prototipado. Entre las &ldquo;limitaciones&rdquo; a la hora de adoptar POO, (js es débilmente tipado y multiparadigma, por lo que no puede hacer ciertas cosas a cambio de poder hacer otras), no se pueden declarar interfaces, ni existe el concepto de visibilidad (público, protegido, privado). A veces se puede diseñar las clases consiguiendo atributos y métodos privados siguiendo el <a href="http://www.etnassoft.com/2011/04/11/el-patron-de-modulo-en-javascript-en-profundidad/">patrón Module</a>, pero para conseguirlo no podría usar la notación <em>class</em> que trae javascript en su última versión. Por eso para distinguir si nuestro método o atributo es privado, usaremos una convención de código: Si tiene el prefijo <code>_</code>, es privado. No lo uses desde fuera de la clase. Sus atributos públicos pueden ser accedidos directamente, sin método getter. Sin embargo para su setter, intenta usar un método. Sí, todo esto es peligroso. Por eso está de moda hacer programación funcional e inmutabilidad en javascript.</p>
+
+<p>El motivo de haber utilizado la orientación a objetos es la siguiente: Una vez que coges soltura, es la forma más sencilla de representar la &ldquo;realidad&rdquo; por medio de código, y de poder modificarlo, mantenerlo y reutilizarlo posteriormente. O al menos en la teoría, luego ya&hellip;</p>
+
+<p>Cada objeto del juego será una clase. Cada clase tendrá sus atributos propios, y una lista de funciones, que en <strong>POO</strong> se llaman métodos, para actuar sobre ésa clase. Programar un juego es básicamente relacionar distintas clases entre sí a través de sus métodos, que harán algún tipo de acción a partir de los argumentos que se les pasa y los valores de sus atributos.</p>
+
+<p>Lo primero que tenemos que hacer, es identificar los componentes claves que tendrá el juego, su lógica, su mecánica. ¿Que podemos entender como un componente? Pues mas o menos sería cada &ldquo;pieza&rdquo; que tenga una lógica propia y que sea lo suficientemente compleja como para merecer tener una clase propia. Por ejemplo, el protagonista, los enemigos, las armas, los disparos, el mapa, los items&hellip; Cada juego es un mundo.</p>
+
+<p>En el space invaders, se me ocurren los siguientes componentes:</p>
+
+<ul>
+<li><strong>Player</strong>. Esta entidad podrá moverse horizontalmente en la pantalla y, disparar, a petición del jugador, y ser impactada por alguna de las naves enemigas.</li>
+<li><strong>Alien</strong>. Puede moverse tanto horizontal como verticalmente, aunque su movimiento está automatizado. En nuestra versiuón no podrá disparar, pero sí impactar con la nave del jugador.</li>
+<li><strong>Shot</strong>. Esta clase será el disparo del jugador, que podrá chocar con alguna nave enemiga, y que sólo se puede mover verticalmente.</li>
+</ul>
+
+<p>El &ldquo;mapa&rdquo; del juego es muy básico, así que no necesita clase propia. La nave protagonista solo tiene una forma de disparar, así que no merece la pena meter un concepto de &ldquo;arma&rdquo;. En este juego no hay items, complejidad que nos ahorramos. Nuestras entidades, como ya dijimos antes, estarán representadas gráficamente por simples rectángulos blancos en el caso de los aliens, verde para el jugador, y amarillo para los disparos. En un tutorial posterior me dedicaré a explicar cómo utilizar imágenes y sprites en su lugar, introduciéndonos en el maravilloso mundo de las animaciones.</p>
+
+<p>Ahora que tengo los componentes principales del juego, voy a pensar alguna forma de gestionar esas clases, para hacer funcionar el juego, y la interación con el jugador. Como se puede ver, me interesa trazar una línea entre las clases que forman mi juego, que son concretas y difícilmente reusables para otros juegos, de las que simplemente son una especie de &ldquo;framework&rdquo; que puedo utilizar parte en otros proyectos.</p>
+
+<ul>
+<li><strong>Keyboard</strong>. Se encargará de la gestión de los eventos de teclado.</li>
+<li><strong>Render</strong>. Dibujará en pantalla al resto de componentes.</li>
+<li><strong>Game</strong>. Aquí pretendo meter toda la lógica (o mecánica) de mi juego. Por ejemplo, esta se encargará de controlar el movimiento de las naves enemigas, o de comprobar si los disparos del jugador aciertan en algún alienígena. Es la clase principal, que contendrá el bucle infinito y hará de director de orquesta de las clases que forman el juego.</li>
+</ul>
+
+<p>Como podeis ver, queda claramente diferenciada la parte que gestiona la lógica del juego, con la parte que leerá eventos del teclado, o de la parte que dibujará el juego en pantalla. Esto me facilitará que otro día pueda implementar un control del juego usando sólo el ratón, o de dibujar en 3D este juego; todo ello sin que requiera modificar profundamente el juego, y por lo tanto, con poca probabilidad de romperlo.</p>
+
+<p>Tampoco pasa nada programarlo todo en una clase <strong>Game</strong> gigante. A este nivel de refinamiento se llega por experiencia. Y probablemente cuando me ponga a picar código, quizá vea interesante meter mas clases, o prescindir de alguna. Lo que interesa es que antes de empezar, tengas un plan y un objetivo. Cuando por el camino se te ocurra alguna alternativa pero no lo tienes claro, deja de vacilar, recuerda el plan original y cíñete a él. Luego si eso ya tendrás tiempo de modificarlo.</p>
+
+<h2 id="cómo-depurar-el-juego">Cómo depurar el juego</h2>
+
+<p>Si bien lo que voy a explicar a continuación no es estrictamente necesario, sí puede resultarte verdaderamente útil para cuando programes y depures un nuevo videojuego. El control de errores en javascript, es particularmente odioso. Javascript es un lenguaje débilmente tipado; no hace apenas comprobaciones de ningún tipo cuando maneja las variables, porque suele castearlas (convertirlas de un tipo a otro) automáticamente sin avisar, con lo que detectar errores a veces puede ser una odisea.</p>
+
+<p>Además nuestro juego se basa en un bucle infinito, por lo que laa vieja técnica de imprimir en pantalla el valor de alguna variable, y ver cuándo falla al calcular su valor, puede ser una odisea.</p>
+
+<p>Y entonces llegó <strong>Chrome</strong> y su <strong>console</strong> al rescate. En él tenemos un depurador del código capaz de insertar breakpoints en las líneas que queramos, para poder ir ejecutando el código línea a línea a partir de ellos, y poder ver mediante un simple doble click sobre la ventana del código el valor que contienen las variables en un momento dado. Una vez que lo pruebes y te acostumbres a usarlo, no querrás otra cosa. Por si fuera poco, Google tiene el mejor motor para interpretar javascript. En chrome, tus códigos normalmente se ejecutarán algo más rápidos que en otros navegadores. Lee cómo funciona, aprende a exprimirlo, y ámalo. Puedes empezar con <a href="https://developers.google.com/web/tools/chrome-devtools/console/?hl=es">este enlace</a>.</p>
+
+<p>Pero como dije antes, no pasa nada si usas <strong>Firefox</strong>, o <strong>Microsoft Edge</strong>. Ambos tienen entornos de desarrollo muy similares, con los que puedes hacer mas o menos lo mismo.</p>
+
+<p>Y con este tochazo, damos por finalizada la introducción de cómo programar un videojuego en javascript. En el <a href="/posts/canvas-2d-game/tutorial-02/">próximo capítulo</a>, empezaremos a explicar el código del juego. ¡Hasta la próxima!</p>
+
+</article>
+
+
+
+</div>
+</div>
+<script src="/js/theme.min.js" type="text/javascript"></script>
+
+
+</body>
+</html>
+
