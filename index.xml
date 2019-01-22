@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Project</title>
+    <title>JGRC Project</title>
     <link>/</link>
-    <description>Recent content on Project</description>
+    <description>Recent content on JGRC Project</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 20 Jan 2019 17:30:00 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 22 Jan 2019 21:45:00 +0100</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>tut03-canvas-2d.js</title>
+      <title>cv.pdf</title>
+      <link>/cv/</link>
+      <pubDate>Tue, 22 Jan 2019 21:45:00 +0100</pubDate>
+      
+      <guid>/cv/</guid>
+      <description>Curriculum vitae. Todo sobre mi vida y obra.</description>
+    </item>
+    
+    <item>
+      <title>tut04-canvas-2d.json</title>
+      <link>/posts/canvas-2d-game/tutorial-04/</link>
+      <pubDate>Sun, 20 Jan 2019 20:00:00 +0100</pubDate>
+      
+      <guid>/posts/canvas-2d-game/tutorial-04/</guid>
+      <description>Tutorial canvas 2D - Cómo hacer un juego en javascript 4ª parte. Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la lección anterior nos centramos en darle animaciones a las entidades para que se movieran por la pantalla, lo que nos introdujo el concepto de tiempo delta y el bucle principal del juego.</description>
+    </item>
+    
+    <item>
+      <title>tut03-canvas-2d.css</title>
       <link>/posts/canvas-2d-game/tutorial-03/</link>
       <pubDate>Sun, 20 Jan 2019 17:30:00 +0100</pubDate>
       
@@ -29,7 +47,7 @@
     </item>
     
     <item>
-      <title>tut01-canvas-2d.js</title>
+      <title>tut01-canvas-2d.html</title>
       <link>/posts/canvas-2d-game/tutorial-01/</link>
       <pubDate>Sat, 19 Jan 2019 18:00:00 +0100</pubDate>
       
@@ -44,8 +62,7 @@
       
       <guid>/about/</guid>
       <description>Sobre el autor. Bueno, pues JGRC no son mas que las iniciales de mi nombre completo, Juan Gabriel Rodríguez Carrión, un simple ingeniero técnico informático de gestión residente en Santomera, localidad de Murcia, España.
-Aunque toco un poco todos los palos, lo que mas me gusta es el desarrollo de aplicaciones y páginas web en PHP y MySQL. Y por supuesto JavaScript.
-Si alguno desea contactar conmigo para enviarme proposiciones de matrimonio, dinero negro y/o artículos de contrabando, puede hacerlo enviando su mensaje a [ jgrodriguezcarrion arroba gmail punto com].</description>
+Aunque toco un poco todos los palos, me he encasillado en el desarrollo de aplicaciones, apìs y páginas web usando php, mysql, mongo, redis, rabbitmq y toda aquella herramienta de moda que haga bonito en mi currículum.</description>
     </item>
     
   </channel>

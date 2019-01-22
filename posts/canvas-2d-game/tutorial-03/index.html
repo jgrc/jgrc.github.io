@@ -8,7 +8,7 @@
 
 <meta name="description" content="">
 
-<title>tut03-canvas-2d.js</title>
+<title>tut03-canvas-2d.css</title>
 <meta name="generator" content="Hugo 0.53" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/pojoaque.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
@@ -24,16 +24,20 @@
 <div class="col-md-3 menu">
     <nav class="col-md-3">
     
-    <h3 class="home-link"><a href="">JGRC Project</a></h3>
+    <h3 class="home-link"><a href="">Root</a></h3>
     <div id="last-posts" class="open">
-        <h3 data-open="last-posts">Project - Last modified files</h3>
+        <h3 data-open="last-posts">JGRC Project - Last modified files</h3>
         <ul>
             
-            <li><a href="/posts/canvas-2d-game/tutorial-03/">tut03-canvas-2d.js</a></li>
+            <li><a href="/cv/">cv.pdf</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-04/">tut04-canvas-2d.json</a></li>
+            
+            <li><a href="/posts/canvas-2d-game/tutorial-03/">tut03-canvas-2d.css</a></li>
             
             <li><a href="/posts/canvas-2d-game/tutorial-02/">tut02-canvas-2d.js</a></li>
             
-            <li><a href="/posts/canvas-2d-game/tutorial-01/">tut01-canvas-2d.js</a></li>
+            <li><a href="/posts/canvas-2d-game/tutorial-01/">tut01-canvas-2d.html</a></li>
             
             <li><a href="/about/">autor.md</a></li>
             
@@ -47,6 +51,8 @@
         <ul class="tags">
             
             <li><a href="/tags/canvas">canvas</a></li>
+            
+            <li><a href="/tags/colisiones">colisiones</a></li>
             
             <li><a href="/tags/console">console</a></li>
             
@@ -73,7 +79,9 @@
         <h3 data-open="categories">vendor</h3>
         <ul class="categories">
             
-            <li><a href="/categories/tutorial-game-canvas-2d.js">tutorial-game-canvas-2d.js</a></li>
+            <li><a href="/categories/autor.tar.gz">autor.tar.gz</a></li>
+            
+            <li><a href="/categories/tutorial-game-canvas-2d.zip">tutorial-game-canvas-2d.zip</a></li>
             
         </ul>
     </div>
@@ -83,7 +91,7 @@
 </div>
 <div class="col-md-9 content">
 
-<h1>tut03-canvas-2d.js</h1>
+<h1>tut03-canvas-2d.css</h1>
 <h4>Created at 2019-01-20 17:30:00</h4>
 
 <a href="https://twitter.com/share" class="twitter-share-button" data-via="kendo5731"></a>
@@ -114,7 +122,7 @@
 
 <p>Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la <a href="/posts/canvas-2d-game/tutorial-02/">lección anterior</a> vimos cómo crear las entidades que necesita el juego mediante herencia de los atributos y métodos en común, y cómo empezar a dibujar el juego en la pantalla. Es hora de hacer que los aliens y el jugador se muevan un poco.</p>
 
-<p><img align="left" src="/img/posts/canvas-2d-game/tutorial-02.png" alt="Tutorial 02" title="Tutorial 02" style="padding: 10px;" /></p>
+<p><img align="left" src="/img/posts/canvas-2d-game/tutorial-02.png" alt="Tutorial 03" title="Tutorial 03" style="padding: 10px;" /></p>
 
 <p><a href="/code/posts/canvas-2d-game/tutorial-03/">Aquí</a> puedes correr la versión del juego que vamos a detallar en este artículo.</p>
 
@@ -156,7 +164,6 @@ class Entity {
 class Alien extends Entity {
     constructor(x, y) {
         super(x, y, 75, 0, 40, 25, 'white');
-        this.initialVelocity = 75;
     }
 
     changeDirection() {
@@ -288,7 +295,7 @@ class Player extends Entity {
 }
 </code></pre>
 
-<p>Al igual que con los aliens, le metemos a la clase <strong>Player</strong> los métodos mas sencillos para gestionar su movimiento. El jugador puede moverse a la derecha y moverse a la izquierda, ha una velocidad determinada. Al igual que con los aliens, me basta indicar su <em>dx</em> para que el método <em>move</em> del padre haga lo que tenga que hacer. Pero hay una novedad: Si el jugador no pulsa ninguna tecla, la nave no debe moverse. Para ello hemos metido el <em>stop</em>.</p>
+<p>Al igual que con los aliens, le metemos a la clase <strong>Player</strong> los métodos mas sencillos para gestionar su movimiento. El jugador puede moverse a la derecha y moverse a la izquierda, a una velocidad determinada. Al igual que con los aliens, me basta indicar su <em>dx</em> para que el método <em>move</em> del padre haga lo que tenga que hacer. Pero hay una novedad: Si el jugador no pulsa ninguna tecla, la nave no debe moverse. Para ello hemos metido el <em>stop</em>.</p>
 
 <p>Veámos ahora qué cambia en la clase principal del juego.</p>
 
@@ -320,7 +327,7 @@ class Game {
 
 <p>Como se puede ver, poca cosa. Es la magia de repartir la funcionalidad entre las distintas clases, y tener un diseño previo decente. En la lógica del juego, ahora también estará antento al teclado, chequeando si la tecla esperada está siendo pulsada en ese momento. Si lo está, y el jugador no está en el límite del mapa, se procederá indicarle a la clase <strong>Player</strong> cómo tiene que moverse en la próxima llamada a su <em>move</em>, que se hará en el <em>_update</em>, como con los aliens. Para resetear el posible movimiento anterior que pudiera tener el jugador, <em>_playerMovement</em> empieza por un <em>stop</em>, como dijimos antes. Es una mierdecilla que no me gusta, seguro que pensando un poco más, idee una forma donde tal orden no sea necesaria; pero tampoco me quitará el sueño.</p>
 
-<p>Y ya está bien por el momento, si ejecutamos el juego en su estado actual, conseguiremos que las naves alienígenas se muevan en zigzag desde arriba hasta desaparecer por abajo de la pantalla; y que la nave protagonista responda a las pulsaciones de teclas que haga el jugador. Sólo nos queda poder disparar a nuestro gusto, que los disparos destruyan a las naves alienígenas (lo que nos servirá para introducirnos en el maravilloso mundo de la detección de colisiones), y saber cuándo se ha acabado la partida para mostrar algun texto en la pantalla. ¡Hasta la próxima!</p>
+<p>Y ya está bien por el momento, si ejecutamos el juego en su estado actual, conseguiremos que las naves alienígenas se muevan en zigzag desde arriba hasta desaparecer por abajo de la pantalla; y que la nave protagonista responda a las pulsaciones de teclas que haga el jugador. Sólo nos queda poder disparar a nuestro gusto, que los disparos destruyan a las naves alienígenas (lo que nos servirá para introducirnos en el maravilloso mundo de la detección de colisiones), y saber cuándo se ha acabado la partida para mostrar algun texto en la pantalla. Todo esto será el motivo para un <a href="/posts/canvas-2d-game/tutorial-04/">próximo capítulo</a>.</p>
 
 </article>
 

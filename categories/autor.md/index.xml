@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Autor.md on Project</title>
+    <link>/categories/autor.md/</link>
+    <description>Recent content in Autor.md on Project</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 18 Jan 2019 17:00:00 +0100</lastBuildDate>
+    
+	<atom:link href="/categories/autor.md/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>autor.md</title>
+      <link>/about/</link>
+      <pubDate>Fri, 18 Jan 2019 17:00:00 +0100</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Sobre el autor. Bueno, pues JGRC no son mas que las iniciales de mi nombre completo, Juan Gabriel Rodríguez Carrión, un simple ingeniero técnico informático de gestión residente en Santomera, localidad de Murcia, España.
+Aunque toco un poco todos los palos, lo que mas me gusta es el desarrollo de aplicaciones y páginas web en PHP y MySQL. Y por supuesto JavaScript.
+Si alguno desea contactar conmigo para enviarme proposiciones de matrimonio, dinero negro y/o artículos de contrabando, puede hacerlo enviando su mensaje a [ jgrodriguezcarrion arroba gmail punto com].</description>
+    </item>
+    
+  </channel>
+</rss>

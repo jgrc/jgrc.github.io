@@ -2,7 +2,6 @@
 class Alien extends Entity {
     constructor(x, y) {
         super(x, y, 75, 0, 40, 25, 'white');
-        this.initialVelocity = 75;
     }
 
     changeDirection() {

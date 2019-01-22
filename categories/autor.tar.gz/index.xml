@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Autor.tar.gz on JGRC Project</title>
+    <link>/categories/autor.tar.gz/</link>
+    <description>Recent content in Autor.tar.gz on JGRC Project</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 22 Jan 2019 21:45:00 +0100</lastBuildDate>
+    
+	<atom:link href="/categories/autor.tar.gz/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>cv.pdf</title>
+      <link>/cv/</link>
+      <pubDate>Tue, 22 Jan 2019 21:45:00 +0100</pubDate>
+      
+      <guid>/cv/</guid>
+      <description>Curriculum vitae. Todo sobre mi vida y obra.</description>
+    </item>
+    
+    <item>
+      <title>autor.md</title>
+      <link>/about/</link>
+      <pubDate>Fri, 18 Jan 2019 17:00:00 +0100</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Sobre el autor. Bueno, pues JGRC no son mas que las iniciales de mi nombre completo, Juan Gabriel Rodríguez Carrión, un simple ingeniero técnico informático de gestión residente en Santomera, localidad de Murcia, España.
+Aunque toco un poco todos los palos, me he encasillado en el desarrollo de aplicaciones, apìs y páginas web usando php, mysql, mongo, redis, rabbitmq y toda aquella herramienta de moda que haga bonito en mi currículum.</description>
+    </item>
+    
+  </channel>
+</rss>

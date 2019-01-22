@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Teclado on Project</title>
+    <title>Teclado on JGRC Project</title>
     <link>/tags/teclado/</link>
-    <description>Recent content in Teclado on Project</description>
+    <description>Recent content in Teclado on JGRC Project</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 20 Jan 2019 17:30:00 +0100</lastBuildDate>
     
@@ -11,7 +11,7 @@
     
     
     <item>
-      <title>tut03-canvas-2d.js</title>
+      <title>tut03-canvas-2d.css</title>
       <link>/posts/canvas-2d-game/tutorial-03/</link>
       <pubDate>Sun, 20 Jan 2019 17:30:00 +0100</pubDate>
       

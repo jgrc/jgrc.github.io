@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/cv/</loc>
+    <lastmod>2019-01-22T21:45:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/canvas-2d-game/tutorial-04/</loc>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/posts/canvas-2d-game/tutorial-03/</loc>
     <lastmod>2019-01-20T17:30:00+01:00</lastmod>
   </url>
@@ -23,13 +33,26 @@
   </url>
   
   <url>
+    <loc>/categories/autor.tar.gz/</loc>
+    <lastmod>2019-01-22T21:45:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/canvas/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/</loc>
+    <lastmod>2019-01-22T21:45:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/colisiones/</loc>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -52,20 +75,20 @@
   </url>
   
   <url>
+    <loc>/</loc>
+    <lastmod>2019-01-22T21:45:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/javascript/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/posts/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -83,7 +106,7 @@
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -100,8 +123,8 @@
   </url>
   
   <url>
-    <loc>/categories/tutorial-game-canvas-2d.js/</loc>
-    <lastmod>2019-01-20T17:30:00+01:00</lastmod>
+    <loc>/categories/tutorial-game-canvas-2d.zip/</loc>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   

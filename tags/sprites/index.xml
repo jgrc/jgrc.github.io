@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Sprites on Project</title>
+    <title>Sprites on JGRC Project</title>
     <link>/tags/sprites/</link>
-    <description>Recent content in Sprites on Project</description>
+    <description>Recent content in Sprites on JGRC Project</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sat, 19 Jan 2019 18:00:00 +0100</lastBuildDate>
     
@@ -11,7 +11,7 @@
     
     
     <item>
-      <title>tut01-canvas-2d.js</title>
+      <title>tut01-canvas-2d.html</title>
       <link>/posts/canvas-2d-game/tutorial-01/</link>
       <pubDate>Sat, 19 Jan 2019 18:00:00 +0100</pubDate>
       
