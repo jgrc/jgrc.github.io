@@ -75,6 +75,12 @@
   </url>
   
   <url>
+    <loc>/tags/eventos/</loc>
+    <lastmod>2019-01-20T20:00:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/</loc>
     <lastmod>2019-01-22T21:45:00+01:00</lastmod>
     <priority>0</priority>

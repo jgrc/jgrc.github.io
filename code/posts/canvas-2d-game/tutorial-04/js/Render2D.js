@@ -18,7 +18,6 @@ class Render2D {
     }
 
     gui(score, lives) {
-        //Dibuamos una GUI b�sica
         this._ctx.fillStyle = "white";
         this._ctx.font = "bold 20px monospace";
         this._ctx.fillText(score + " Score", 20, 30);
