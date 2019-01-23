@@ -1,7 +1,8 @@
 'use strict'
 class Alien extends Entity {
     constructor(x, y, eventDispatcher) {
-        super(x, y, 75, 0, 40, 25, 'white', eventDispatcher);
+        super(x, y, 75, 0, 40, 25, 'white');
+        this._eventDispatcher = eventDispatcher;
     }
 
     changeDirection() {

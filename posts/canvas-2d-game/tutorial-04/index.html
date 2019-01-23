@@ -120,541 +120,446 @@
 
 <h1 id="tutorial-canvas-2d-cómo-hacer-un-juego-en-javascript-4ª-parte">Tutorial canvas 2D - Cómo hacer un juego en javascript 4ª parte.</h1>
 
-<p>Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la <a href="/posts/canvas-2d-game/tutorial-03/">lección anterior</a> nos centramos en darle animaciones a las entidades para que se movieran por la pantalla, lo que nos introdujo el concepto de tiempo delta y el bucle principal del juego. También aprendimos una forma de detectar y utilizar los eventos de teclado, por medio de notificaciones para mover al jugador. En éste tutorial completaremos el juego. Nos queda por hacer varias cosas: Permitir que el jugador pueda disparar, para lo que usaremos una nueva clase que represente a un disparo. Los disparos deben destruir naves alienígenas, lo que requerirá ser capaces de detectar las colisiones entre entidades que se produzcan en el juego. Y por último, queremos mostrar algun mensaje de fin de partida, ya sea por haber ganado o perdido.</p>
+<p>Bienvenidos al remake de la tercera parte de cómo realizar un pequeño juego en JavaScript, más concretamente el tan viejo como popular Space Invaders. En la <a href="/posts/canvas-2d-game/tutorial-03/">lección anterior</a> nos centramos en darle animaciones a las entidades para que se movieran por la pantalla, lo que nos introdujo el concepto de tiempo delta y el bucle principal del juego. También aprendimos una forma de detectar y utilizar los eventos de teclado, por medio de notificaciones para mover al jugador. En éste tutorial completaremos el juego. Nos quedan por hacer varias cosas: Permitir que el jugador pueda disparar, para lo que usaremos una nueva clase que represente a un disparo. Los disparos pueden destruir naves alienígenas, lo que requerirá ser capaces de detectar las colisiones entre estas entidades. Y por último, queremos mostrar algun mensaje de fin de partida, ya sea por haber ganado o perdido.</p>
 
 <p><img align="left" src="/img/posts/canvas-2d-game/tutorial-04.png" alt="Tutorial 04" title="Tutorial 04" style="padding: 10px;" /></p>
 
-<p><a href="/code/posts/canvas-2d-game/tutorial-04/">Aquí</a> puedes correr la versión del juego que vamos a detallar en este artículo.</p>
+<p><a href="/code/posts/canvas-2d-game/tutorial-04/">Aquí</a> puedes correr la versión del juego que vamos a comentar en este artículo.</p>
 
 <h2 id="detección-de-colisiones">Detección de colisiones</h2>
 
-<p>Llegó la hora de acoplar un cañón a nuestra nave para empezar a liquidar extraterrestres. Este hecho introduce algunas complicaciones a nuestro juego. ¿Cómo representamos cada disparo?¿Dónde los guardamos?¿Cómo sabemos si un disparo le da a algún alien?¿Cómo le decimos a ese alien, que se destruya? Además, ¿cómo sabemos cuando un alien choca con el jugador, y por consiguiente, pierde la partida? Bien, con la programación orientada a objetos y con un par de ideas felices, resolver estos problemas es mucho más facil de lo que parece.</p>
+<p>Llegó la hora de acoplar un cañón a nuestra nave para empezar a liquidar extraterrestres. Un videojuego donde no puedes matar nada, no es un videojuego de verdad. Salvo uno de fútbol. Este hecho introduce algunas complicaciones a nuestro juego. ¿Cómo representamos cada disparo? ¿Dónde los guardamos? ¿Cómo sabemos si un disparo le da a algún alien? ¿Cómo le decimos a ese alien, que explote? Además, ¿cómo sabemos cuándo un alien choca con el jugador y se lo carga? Bien, con la programación orientada a objetos y un par de ideas, podemos resolver estos problemas mucho más facil de lo que parece.</p>
 
-<p>Algo fundamental para detectar la colisión entre dos entidades del juego, es implementar algún algoritmo sencillo y rápido de ejecutar, ya que es una tarea que se va a estar ejecutando contínuamente infinidad de veces. Hay un montón de literatura en inglés acerca de este controvertido tema, con análisis matemáticos que demuestran que uno es más preciso que otro, pero que el otro es más rápido, etc. Y como dije en el primer tutorial, la forma de representar de las entidades a base de polígonos es crucial para elegir el método de colosión, o viceversa. Para un primer videojuego, yo he optado por el algoritmo más sencillo: Detección de colisiones mediante rectángulos. Como nuestras entidades son rectángulos perfectos, usaré ese mismo rectángulo para calcular las colisiones. Otros juegos más complicados en 2D, que usan imágenes, suelen tener dos estructuras de datos dentro de la clases que representan a las entidades, pero que se usarán para propósitos diferentes: Una de ellas, normalmente una imagen, será que lo que se pinte en el canvas. La otra, normalmente una lista de rectángulos cuyo tamaño y disposición se aproximan al contorno de la figura real contenida en la imagen a dibujar (también se pueden usar círculos, o triángulos, etc), como expliqué en el primer tutorial.</p>
+<p>Algo fundamental para detectar la colisión entre dos entidades del juego es implementar algún algoritmo sencillo y rápido de ejecutar, ya que es una tarea que se va a estar ejecutando contínuamente. Hay un montón de literatura en inglés acerca de este controvertido tema, con análisis matemáticos que demuestran que uno es más preciso que otro, pero que el otro es más rápido, etc. Y como dije en el primer tutorial, la forma de representar de las entidades a base de polígonos es crucial para elegir un buen y eficiente método de colosión, o viceversa. Para un primer videojuego, yo he optado por el algoritmo más sencillo de todos: Detección de colisiones mediante rectángulos. Como el cuerpo de entidades son rectángulos que no rotan, usaré ese mismo rectángulo para calcular sus colisiones. Otros juegos más complicados en 2D, que usan imágenes, suelen tener dos estructuras de datos dentro de la clases que representan a las entidades, pero que se usarán para propósitos diferentes: Una de ellas, normalmente una imagen, será que lo que se pinte en el canvas. La otra se usará para las físicas, y normalmente consiste en una lista de rectángulos, círculos y/o triángulos cuyo tamaño y disposición se aproximan al contorno real de la figura dibujable.</p>
 
-<p>Todo ésto es muy bonito, ¿pero dónde ponemos la detección de colisiones? Bueno, como la clase Juego es la que contiene una lista con todas las entidades, parece que es el sitio ideal para escribir un nuevo método que realice esos cálculos. Pues no. Bueno, sí, y no. En cada vuelta del bucle principal del juego, efectívamente debemos de introducir algún nuevo código que compruebe si están ocurriendo colisiones, pero como he repetido varias veces, todas las cosas relacionadas con el funcionamiento de una clase, deben ir dentro de esa clase. Y como todas las entidades deben comprobar si están colisionando, el lugar ideal es meter el nuevo método en la clase padre <strong>Entity</strong>:</p>
+<p>Todo esto es muy bonito, ¿pero dónde programamos la detección de colisiones? Bueno, como la clase <strong>Game</strong> es la que contiene una lista con todas las entidades, parece que es el sitio factible para escribir un nuevo método que realice esos cálculos. Pues no. Bueno, sí, y no. En cada vuelta del bucle principal del juego, efectívamente debemos de introducir algún nuevo código que compruebe si están ocurriendo colisiones entre las entidades, pero como he repetido varias veces, todas las cosas relacionadas con el funcionamiento de una clase, deben ir dentro de esa clase. Y como todas las entidades deben comprobar si están colisionando, el lugar ideal es meter el nuevo método en la clase padre <strong>Entity</strong>:</p>
 
-<pre><code class="language-javascript">function Entidad(){
+<pre><code class="language-javascript">class Entity {
+    // ...
+    _inCollisionWith(other) {
+        if (this.x + this.width &lt; other.x) {
+            return false;
+        }
+        if (this.y + this.height &lt; other.y) {
+            return false;
+        }
+        if (this.x &gt; other.x + other.width) {
+            return false;
+        }
+        if (this.y &gt; other.y + other.height) {
+            return false;
+        }
 
-/*this.x;
-this.y;
-this.dx=0;
-this.dy=0;
-this.ancho;
-this.alto;
-this.color;*/
-
-this.tipo;
-
-this.constructorBase=function(anchoIni, altoIni, colorIni,xIni,yIni,tipoIni){
-/*this.ancho=anchoIni;
-this.alto=altoIni;
-this.color=colorIni;
-this.x=xIni;
-this.y=yIni;*/
-this.tipo=tipoIni;
-};
-
-/*this.moverBase=function(delta){
-this.x+=(delta*this.dx)/1000;
-this.y+=(delta*this.dy)/1000;
-};
-
-this.setVelocidadHorizontal=function(dxIni){
-this.dx=dxIni;
-};
-
-this.setVelocidadVertical=function(dyIni){
-this.dy=dyIni;
-};
-
-this.getVelocidadHorizontal=function(){
-return this.dx;
-};
-
-this.getVelocidadVertical=function(){
-return this.dy;
-};
-
-this.getX=function(){
-return this.x;
-};
-
-this.getY=function(){
-return this.y;
-};*/
-
-this.getTipo=function(){
-return this.tipo;
-};
-
-/*this.dibujar=function(contexto){
-contexto.fillStyle = this.color;  
-contexto.fillRect (this.x, this.y, this.ancho, this.alto);
-};*/
-
-this.colision=function(otro){
-if (this.x + this.ancho &amp;lt; otro.x) {
-    return false;
+        return true;
     }
-    if (this.y + this.alto &amp;lt; otro.y) {
-    return false;
-}
-    if (this.x &amp;gt; otro.x + otro.ancho) {
-    return false;
-    }
-    if (this.y &amp;gt; otro.y + otro.alto) {
-    return false;
-    }
-    return true;
-};
 }
 </code></pre>
 
-<p>Aquí tenemos la versión final de la clase <strong>Entidad</strong>. Sólo le hemos añadido un nuevo atributo <strong>tipo</strong> y su método getter, además de asignarle un valor que nos llegará como argumento en el constructor. Contendrá un carácter, el cual usaremos para no aplicar la detección de colisiones a dos entidades que sean del mismo tipo, lo que evitará que se hagan comprobaciones de colisiones innecesarias, como veremos después.</p>
-
-<p>El cambio más interesante viene al final: El método <strong>colision</strong>. Para funcionar, necesita del argumento <strong>otro</strong>, que es un puntero a otra entidad con la que queremos comprobar si choca, devolviendo un booleano como respuesta. El algoritmo es muy sencillo: Hay 4 sitaciones en los que dos rectángulos, A y B, es imposible que colisionen, es decir, que uno se pinte encima del otro:</p>
+<p>Como podemos ver, el algoritmo es tremendamente sencillo. Dos rectángulos no están en colisión si:</p>
 
 <ul>
-<li>Si el valor de la coordenada X en cualquiera de los vértices derechos de A es menor que el valor X de de cualquiera de los vértices izquierdos de B.</li>
-<li>Si el valor de la coordenada Y en cualquiera de los vértices inferiores de A es menor que el valor Y de de cualquiera de los vértices superiores de B.</li>
-<li>Si el valor de la coordenada X en cualquiera de los vértices izquierdos de A es mayor que el valor de X en cualquierda de los vértices derechos de B.</li>
-<li>Si el valor de la coordenada Y en cualquiera de los vértices superiores de A es mayor que el valor de Y en cualquierda de los vértices inferioresde B.</li>
+<li>Si el valor de la coordenada <em>x</em> en cualquiera de los vértices derechos de A es menor que el valor <em>x</em> de de cualquiera de los vértices izquierdos de B.</li>
+<li>Si el valor de la coordenada <em>y</em> en cualquiera de los vértices inferiores de A es menor que el valor <em>y</em> de de cualquiera de los vértices superiores de B.</li>
+<li>Si el valor de la coordenada <em>x</em> en cualquiera de los vértices izquierdos de A es mayor que el valor de <em>x</em> en cualquierda de los vértices derechos de B.</li>
+<li>Si el valor de la coordenada <em>y</em> en cualquiera de los vértices superiores de A es mayor que el valor de <em>y</em> en cualquierda de los vértices inferioresde B.</li>
 </ul>
 
-<p>Si se cumple alguna de estas condiciones, los dos rectángulos no están en colisión. En caso contrario, sí lo están. Como nota, podemos ver que accedemos directamente a los atributos de <strong>otro</strong>, sin utilizar sus métodos getter. ¿Por qué, si en otras ocasiones dijimos que una clase no debe acceder directamente a los atributos de otra clase? Bueno, en realidad &ldquo;otro&rdquo; no es una clase distinta, es también una instancia de la clase Entidad, que es donde estamos escribiendo este nuevo método. Entonces, sí podemos acceder a sus atributos directamente.</p>
+<p>En cualquier otro caso, los rectángulos están en colisión.</p>
 
-<p>Pero las entidades aún necesitan otro método que se encargue de realizar algunas acciones cuando se detecte una colisión. Como cada entidad responde a una colisión de manera diferente, sin código en común, tendremos que implementarlo en todas las clases hijas.</p>
+<p><img align="center" src="/img/posts/canvas-2d-game/collision.png" alt="Ejemplos de colisiones" title="Ejemplos de colisiones" style="padding: 10px;" /></p>
 
-<pre><code class="language-javascript">function EntidadAlien(){
-/*this.velocidadMovimiento=75;
-this.juego;*/
+<p>Ahora bien. Si un un alien choca con una bala, o con un jugador, ambas entidades deben desaparecer. ¿Cómo gestionamos eso? La forma por la que optado es la más directa: Le he metido un atributo nuevo a las entidades: <em>alive</em>, un booleano para indicar si ela entidad stá vivo o no.</p>
 
-this.constructor=function(juego,xIni,yIni){
-this.constructorBase(40,25,&quot;blue&quot;,xIni,yIni,&quot;a&quot;);
-/*this.juego=juego;
-this.dx=-this.velocidadMovimiento;*/
-};
+<pre><code class="language-javascript">class Entity {
+    constructor(x, y, dx, dy, width, height, color) {
+        // ...
+        this.alive = true;
+    }
 
-/*this.mover=function(delta){
-if (this.dx&amp;lt;0 &amp;amp;&amp;amp; this.x&amp;lt;10) {
-    this.juego.actualizaLogica();
+    kill() {
+        this.alive = false;
+    }
 }
-if (this.dx&amp;gt;0 &amp;amp;&amp;amp; this.x&amp;gt;juego.getAnchuraCanvas()-(this.ancho+10)) {
-    this.juego.actualizaLogica();
-}
-this.moverBase(delta);
-};
-
-this.logica=function(){
-this.dx=-this.dx;
-this.y+=10;
-if (this.y&amp;gt;570) {
-    this.juego.notificarMuerte();
-}
-};*/
-
-this.colosionadoCon=function(otro){
-};
-}
-/*EntidadAlien.prototype = new Entidad();*/
 </code></pre>
 
-<p>Empecemos por EntidadAlien. Como podemos ver, prácticamente es idéntica, sólo estamos añadiéndole un argumento nuevo al constructor, el caracter &ldquo;a&rdquo; (de alien) para saber el tipo de entidad que se está creando. Y al final del todo, el método <strong>colosionadoCon</strong>, que recibe como argumento la entidad con la que ha chocado. Pero cuando una nave recibe el aviso de que ha chocado con algo, no necesita hacer nada. Serán las entidades de disparo y jugador las que comprueben si han chocado con algún alien. Podríamos haber hecho que fuera la entidad alien la que se encargara de manejar las acciones que hay que ejecutar, es indiferente. Pero había que escoger una forma, y elegimos el otro camino.</p>
+<p>Como se puede ver, hay poco misterio. Inicialmente la entidad está viva, hasta que alguien decide matarla con su <em>kill</em>.</p>
 
-<pre><code class="language-javascript">function EntidadNave(){
-/*this.juego;*/
+<p>Veámos cómo por ejemplo el alien gestiona sus colisiones.</p>
 
-this.constructor=function(juego,xIni,yIni){
-this.constructorBase(40,25,&quot;green&quot;,xIni,yIni,&quot;n&quot;);
-/*this.juego=juego;*/
-};
+<pre><code class="language-javascript">'use strict'
+class Alien extends Entity {
+    // ...
 
-/*this.mover=function(delta){
-if (this.dx&amp;lt;0 &amp;amp;&amp;amp; this.x&amp;lt;10) {
-    return;
+    collide(anything) {
+        if (this._inCollisionWith(anything)) {
+            this.kill();
+            anything.kill();
+        }
+    }
+
+    kill() {
+        super.kill();
+        // ...
+    }
 }
-if (this.dx&amp;gt;0 &amp;amp;&amp;amp; this.x&amp;gt;juego.getAnchuraCanvas()-(this.ancho+10)) {
-    return;
-}
-
-this.moverBase(delta);
-};
-
-this.logica=function(){
-};*/
-
-this.colosionadoCon=function(otro){
-if (otro instanceof EntidadAlien) {
-    this.juego.notificarMuerte();
-}
-};
-}
-/*EntidadNave.prototype = new Entidad();*/
 </code></pre>
 
-<p>Igual que antes, <strong>EntidadJugador</strong> modifica un poco el constructor, pasándole el carácter que representará su tipo &ldquo;n&rdquo; (nave). Pero su método <strong>colosionadoCon</strong> si contiene código. Cuando la entidad nave colisione con cualquier cosa, el método juego se lo comunicará a la entidad nave a través de este método. Si la entidad con la que hemos colisionado, otro, es una instancia de la clase <strong>EntidadAlien</strong>, entonces debemos comunicarle al juego que hemos muerto. Como podemos ver en el código, instanceof sirve para comprobar si una variable es una instancia de una clase determinada. Podríamos haber usado también <code>if (otro.getTipo()==&quot;a&quot;) { juego.notificarMuerte(); }</code>, pero así podemos mostrar esta nueva y muy útil función de javascript para el manejo de clases.</p>
+<p>Alguien le enviará al alien, otra entidad (un disparo, o el propio jugador) con la que detectar la colisión. Si colisionan, ambos palman. De momento, el <em>kill</em> del alien se limita a llamar al método equivalente de la clase padre, pero esta es la forma de hacer que el alien tenga un comportamiento extra cuando muera, como veremos más adelante, y con qué finalidad.</p>
 
-<p>Y a continuación, es hora de crear la nueva clase que representará a cada disparo que se realice, EntidadDisparo. Muchos de sus métodos, te resultarán familiares:</p>
+<h1 id="pim-pam-pum">Pim pam pum</h1>
 
-<pre><code class="language-javascript">function EntidadDisparo(){
+<p>Llegó el ansiado momento de disparar. Empezamos por la clase <strong>Shot</strong>, que representará un disàro (y que quizá debí llamar bullet&hellip;). Agarraos los machos que ahora viene lo duro.</p>
 
-this.velocidadMovimiento=-300;
-this.juego;
-
-this.usado=false;
-
-this.constructor=function(juego,xIni,yIni){
-this.constructorBase(2,5,&quot;yellow&quot;,xIni,yIni,&quot;d&quot;);
-this.juego=juego;
-this.dy=this.velocidadMovimiento;
-};
-
-this.mover=function(delta){
-this.moverBase(delta);
-if (this.y&amp;lt;-100) {
-    this.juego.eliminarEntidad(this);
+<pre><code class="language-javascript">'use strict'
+class Shot extends Entity {
+    constructor(x, y, eventDispatcher) {
+        super(x, y, 0, -400, 2, 5, 'yellow');
+    }
 }
-
-};
-
-this.logica=function(){
-};
-
-this.colosionadoCon=function(otro){
-if (this.usado) {
-    return;
-}
-
-if (otro instanceof EntidadAlien) {
-    this.usado=true;
-    this.juego.eliminarEntidad(this);
-    this.juego.eliminarEntidad(otro);
-    this.juego.notificarAlienDestruido();
-}
-};
-}
-EntidadDisparo.prototype = new Entidad();
 </code></pre>
 
-<p>Al igual que EntidadAlien, tiene el atributo <strong>velocidadMovimiento</strong>. Es negativo porque la bala irá hacia arriba, a 300 píxeles por segundo. Su constructor es idéntico al de las otras entidades, pero ésta vez usa el tipo &ldquo;d&rdquo; (disparo), el color amarillo, y un tamaño mucho más pequeño. Su método mover nos aporta una novedad. Sólo ha de comprobar que si nos salimos de la pantalla por su parte superior, se elimine la entidad. Bueno, la parte superior del canvas es cuando y vale 0. Comprobamos con un -100 para que la elimine cuando esté sobradamente fuera del canvas. Ya veremos en la clase Juego, cómo eliminar las entidades. De momento, sólo destacamos que le pasamos como argumento la palabra reservada &ldquo;<em>this</em>&rdquo;,es decir, le estamos pasando un puntero a la instancia que está ejecutando ese método.</p>
+<p>Siendo defraudarte, el disparo no tiene nada especial. Esta entidad se moverá de abajo hacia arriba. Eso quiere decir que su coordenada <em>y</em> decrecerá. Digamos que a una velocidad de 400 píxeles por segundo.</p>
 
-<p>Su método <strong>logica</strong> no necesita hacer nada (recordar que servía para modificar la posición y dirección del movimiento de los aliens). Y por último, nos queda su <strong>colosionadoCon</strong>, que tiene bastante código. La clase EntidadDisparo tiene un atributo llamado <strong>usado</strong>, que contiene un booleano. Sirve para saber si la bala ha sido usada, o no. ¿Qué quiere decir éso? Si miramos <strong>colisionadoCon</strong>, veremos que si la bala tiene el <strong>usado</strong> a true, no hace nada. Y si no, comprueba si la entidad con la que ha chocado es del tipo <strong>EntidadAlien</strong>, en cuyo caso ordena al juego que se eliminen las dos entidades, pone el <strong>usado</strong> a true, y le notifica al juego que un alien ha sido destruido. El atributo <strong>usado</strong> evita que una sola bala &ldquo;atraviese&rdquo; y destruya varios aliens, algo que puede ocurrir en circunstancias anormales, como que las balas sean creadas con un tamaño demasiado grande, o que por culpa del navegador se produzcan retrasos al ejecutarse el bucle principal del juego que pueden llegar a ocasionar que una bala avance demasiada distancia atravesando varios aliens.</p>
+<p>Bien, veámos ahora cómo se dispara. Espero que hayas pensado lo mismo que yo: si dispara el jugador, él debería crear el disparo.</p>
 
-<h2 id="últimos-retoques-de-la-clase-juego">Últimos retoques de la clase Juego</h2>
+<pre><code class="language-javascript">'use strict'
+class Player extends Entity {
+    constructor(x, y /* ... */) {
+        // ...
+        this._shotDelay = 1000;
+        this._lastShot = Date.now() - this._shotDelay;
+    }
 
-<p>¿Qué arma de destrucción masiva escogemos? El único límite es nuestra imaginación. Para disparar, se suele escoger entre dos caminos: Una pulsación de la tecla espacio, 1 disparo. O una forma más cómoda, seguir disparando si mantenemos pulsada la tecla. Elegiremos la última opción, pero nos obliga a ponerle alguna restricción de tiempo entre disparo y disparo. Si sólo hacemos que en cada vuelta del bucle (siempre que se mantenga la tecla espacio apretada) se dispare, el juego no tendría ninguna dificultad, porque dispararíamos tantas veces por segundo como frames se están mostrando. Seríamos una especie de ametralladora muy destructiva, y éso no es lo que queremos.</p>
+    // ...
 
-<p>También hay que controlar cuándo se acaba la partida, para mostrar en la pantalla algún texto. El juego puede terminar por dos motivos:</p>
+    shot() {
+        let now = Date.now();
+        if (now - this._lastShot &gt; this._shotDelay) {
+            this._lastShot = now;
+            return new Shot(Math.round(this.x + this.width / 2), this.y)
+        }
+
+        return null;
+    }
+
+    // ...
+}
+</code></pre>
+
+<p>Esta clase se encarga de instanciar el disparo, he interesa que la haga la clase <em>Player</em> porque ella debería saber en qué posición crearlo. El sitio natural, es desde la parte superior de su centro de gravedad. Pero no basta sólo con crear un disparo. Hay que poner límites al número de disparos que el jugador puede realizar, o el juego no tendría ningún tipo de reto. ¿Tal vez un disparo por segundo como máximo le complique la vida? Probémoslo. Cuando alguien intente que el jugador dispare, le devolveremos el disparo recién creado, o un <code>null</code> si en esa petición el jugador no puede disparar.</p>
+
+<p>Ahora veámos quién da la orden de apretar el gatillo. Espero que tee lo hayas imaginado.</p>
+
+<pre><code class="language-javascript">class Game {
+    // ...
+    _gameLogic() {
+        this._shotsLogic();
+        this._alienLogic();
+        this._playerLogic();
+    }
+
+    _shotsLogic() {
+        this._shots = this._shots.filter(shot =&gt; shot.y &gt; 0);
+        this._shots.forEach(
+            shot =&gt; this._aliens.forEach(
+                alien =&gt; alien.collide(shot)
+            )
+        );
+        this._shots = this._shots.filter(shot =&gt; shot.alive);
+        this._aliens = this._aliens.filter(alien =&gt; alien.alive);
+    }
+
+    _playerLogic() {
+        // ...
+        if (this._keyboard.is(Keyboard.Key.SPACE)) {
+            let shot = this._player.shot();
+            if (shot) {
+                this._shots.push(shot);
+            }
+        }
+        // ...
+    }
+
+    _update() {
+        let delta = this._delta();
+        // ...
+        this._shots.forEach(shot =&gt; shot.move(delta));
+    }
+
+
+
+    _render() {
+        // ...
+        this._shots.forEach(shot =&gt; this._renderer.entity(shot));
+        // ...
+    }
+}
+</code></pre>
+
+<p>Hemos metido un array de disparos, en <em>_shots</em>. Cuando el jugador apriete la tecla <code>espacio</code> ordenará al jugador que dispare. Si éste puede, devolverá el disparo, que meteremos en dicho array. Luego ya el flujo habitual. Se calculará su lógica, se moverá, y se renderizará como los demás.</p>
+
+<p>La lógica del disparo, del método <em>_shotsLogic</em>, aparenta ser mas compleja de lo que en realidad hace. Pero sólo lo aparenta. Cuando te acostumbres a leer funciones flecha y a los métodos funcionales que traen los arrays en javascript, ya no te parecerán extrañas. Simplemente hace lo siguiente, por línea:</p>
+
+<ul>
+<li>Limpia (filtra) el array de disparos que estén fuera del mapa. Es decir, que su coordenada <em>y</em> sea menor que cero (han sobrepasado la parte superior del mapa).</li>
+<li>Por cada disparo comprueba a cada alien si disparo y alien están en colisión, llamando al método <em>collide</em> de la clase <strong>Alien</strong> que ya vimos. Por si no lo recuerdas, lo que hacía si ambas entidades estaban en colisión, era matarlas llamando a sus respectivos métodos <em>kill</em>.</li>
+<li>Limpiamos los disparos que han impactado.</li>
+<li>Limpiamos los aliens impactados.</li>
+</ul>
+
+<p>No era para tanto, ¿verdad?</p>
+
+<h2 id="eventos">¿Eventos!</h2>
+
+<p>Ya tenemos la mecánica del juego implementada. Los aliens bailan, el jugador dispara, los aliens explotan. ¿Qué falta? Pues dos aspectos igual de importantes. Algún sistema de puntuaciones, y que la muerte del jugador suponga un castigo.</p>
+
+<p>El juego tiene dos tipos de finales:</p>
 
 <ul>
 <li>El jugador choca con un alien: Derrota.</li>
-<li>EL jugados destruye todos los aliens: Victoria.</li>
+<li>El jugador destruye todos los aliens: Victoria.</li>
 </ul>
 
-<p>Cuando se detecta alguna de las situaciones anteriores, mostraremos algún texto en la pantalla, y nos quedaremos a la espera de que el jugador pulse la tecla ENTER para empezar un nuevo nivel. Para ello, también usaremos notificaciones.</p>
+<p>En el caso de la victoria, dejaremos que el jugador pueda reiniciar otra partida, conservando su puntuación, y el número de vidas restantes que le queden. Y si pierde, le restaremos una vida. Si no le quedan, le tiramos el típico game over, y si quiere, empezará una nueva partida.</p>
 
-<p>Llegó el momento de empezar al ver el código final de la clase <strong>Juego</strong>, por partes:</p>
+<p>Hemos hecho referencia a dos sistemas nuevos: Vidas del jugador, y su puntuación. Te podrrás imaginar que el sistema de puntuación debería programarse dentro del código que detecta colisiones entre los disparos y los aliens, pero si recuerdas el cómo lo hemos programado, solo consistía en iterar sobre los disparos y los aliens comprobando si chocaban. Y no parece buena idea meter a todas las clases de <strong>Alien</strong> o <strong>Shot</strong> atributos nuevos que se encarguen de esa cuenta. O inyectarle a su <em>constructor</em>, la propia clase <em>Game</em> para que desde dentro de un alien, llame al método adecuado. Si mi clase juego tiene un array de aliens, jamás debería permitir que mi clase alien tuviera una referencia al juego, provocando una dependencia circular.</p>
 
-<pre><code class="language-javascript">function Juego(){
-this.panel;
-/*this.canvas;
-this.contexto;
+<p>Hay unas cuantas formas de gestionar este problema, pero antes de reinventar la rueda, pensémos en qué contexto estamos: Un navegador web. ¿Cómo transmite javascript, la información de las acciones que ocurren en cada elemento HTML? ¡Por eventos! ¿Por qué no usar eventos en mi juego? Probemos a ver qué sale. Veámos otra vez la clase <strong>Alien</strong></p>
 
-this.listaEntidades=[];*/
-this.listaEntidadesEliminar=[];
-/*this.nave;
+<pre><code class="language-javascript">class Alien extends Entity {
+    constructor(x, y, eventDispatcher) {
+        // ...
+        this._eventDispatcher = eventDispatcher;
+    }
 
-this.velocidadMovimiento=300;*/
+    // ...
 
-this.ultimoDisparo=0;
-this.intervaloDisparo=500;
-
-/*this.contadorAliens;
-
-this.gameRunning=false;
-this.logicaRequerida=false;*/
-
-this.esperandoTecla=false;
-
-/*this.izquierdoPulsado=false;
-this.derechoPulsado=false;*/
-this.espacioPulsado=false;
-
-/*this.tiempoTranscurrido;*/
-}
-</code></pre>
-
-<p>Tenemos unos cuantos atributos nuevos. <strong>Panel</strong> contendrá el objeto DIV donde escribiremos los mensajes de texto a mostrar en la pantalla. Hablaremos más sobre ello cuando veamos el constructor. <strong>ListaEntidadesEliminar</strong> es una lista que contendrá las entidades que deben eliminarse en la siguiente vuelta del ciclo. <strong>UltimoDisparo</strong> sirve para almacenar el tiempo en milisegundos transcurridos desde el último disparo, e <strong>intervaloDisparo</strong> contiene la cantidad de tiempo que como mínimo debe transcurrir entre disparo y disparo. Ambos atributos servirán para controlar la tasa de disparos del jugador. EsperandoTecla (debí de llamarlo mejor FinPartida) es un booleano que nos indica si el juego ha acabado, para realizar unas acciones y evitar hacer otras, como veremos después. <strong>EspacioPulsado</strong> es otro booleano que servirá para comprobar si la tecla espacio está pulsada o no.</p>
-
-<pre><code class="language-javascript">this.constructor=function(idCanvas){
-/*this.canvas=document.getElementById(idCanvas);
-this.canvas.width=800;
-this.canvas.height=600;
-this.canvas.style.backgroundColor=&quot;black&quot;;
-this.contexto=this.canvas.getContext('2d');*/
-
-this.panel=document.createElement(&quot;div&quot;);
-this.panel.style.display=&quot;none&quot;;
-this.panel.style.position=&quot;absolute&quot;;
-this.panel.style.top=this.canvas.offsetTop;
-this.panel.style.left=this.canvas.offsetLeft;
-this.panel.style.width=this.canvas.width;
-this.panel.style.height=this.canvas.height;
-this.panel.style.paddingTop=&quot;250px&quot;;
-this.panel.style.textAlign=&quot;center&quot;;
-this.panel.style.color=&quot;yellow&quot;;
-this.panel.style.fontSize=&quot;x-large&quot;;
-document.body.appendChild(this.panel);
-
-/*this.iniciarEntidades();*/
-};
-
-/*this.getAnchuraCanvas=function(){
-return this.canvas.width;
-};*/
-}
-</code></pre>
-
-<p>El constructor trae como novedad la creación de un nuevo elemento DIV que finalmente insertaremos al body. Para crear un elemento nuevo, hay que ejecutar sobre el objeto implícito <strong>document</strong>, su método <strong>createElement</strong>, y pasarle como argumento la etiqueta. A nosotros nos interesa crear un DIV donde escribir los textos que se muestran al final de cada partida, tanto si hemos ganado como si hemos perdido. Después de crear el elemento, le establezco algunas de sus propiedades de estilo. En particular, quiero que siga oculto (display a none), lo coloco de forma absoluta a la página, lo redimensiono al mismo tamaño que tiene el canvas, y lo pongo justo encima. A continuación le pongo un padding vertical para que se escriba el texto más o menos a la mitad del DIV, le digo que lo alinee horizontalmente al centro, pongo que las letras se escriban amarillas y con un tamaño extra-grande. Para insertarlo en el árbol DOM de la página, uso <strong>document.body.appendChild</strong>. No hubiera importado demasiado haberlo insertado en otro sitio, pues al posicionarlo de forma absoluta, se hubiera situado en el mismo sitio.</p>
-
-<p>Creo que en el segundo tutorial hablé un poco sobre que no debemos perder de vista que estamos programando juegos dentro de una página web. Esto quiere decir que podemos usar los elementos HTML y los efectos CSS a nuestro antojo para realizar tareas gráficas mucho más difíciles de implementar y costosas de ejecutar con funciones de dibujo gráfico en javascript. Yo quería mostrar un texto centrado cuando la partida termina. Si hubiera utilizado las funciones del canvas para dibujar texto en la pantalla, hubiera tenido que indicarle unas coordenadas donde empezar a dibujar el texto en el canvas. Pero para que el texto quedara centrado, tendría que ver cuánto mide de ancho la frase que quiero pintar, que depende del tipo de fuente y tamaño escogido para las letras. Como la línea no cabe entera en en ancho del canvas, habría tenido que partirla y hacer que el trozo sobrante se vuelva a dibujar alineado al centro de la pantalla, con más cálculos. Y como he utilizado varias líneas de texto, hubiera tenido realizar todos estos cálculos por cada una de ellas.</p>
-
-<p>Sin embargo, si utilizo un simple DIV de HTML para mostrar texto (incluso texto con imágenes, o botones para pulsar que ejecutan posibles métodos de la clase juego) utilizando sus propiedades de estilo, delego todos esos problemas al navegador, que obviamente, sabe cómo resolverlos de la forma más óptima (lo hace contínuamente con cada página web que abres).</p>
-
-<p>Como he mencionado, inicialmente este panel de texto no se muestra. Cuando el juego detecte que se ha acabado la partida, cambiaremos su propiedad display adecuadamente.</p>
-
-<pre><code class="language-javascript">this.empezarJuego=function(){
-this.listaEntidades=[];
-this.listaEntidadesEliminar=[];
-this.iniciarEntidades();
-
-this.izquierdoPulsado=false;
-this.derechoPulsado=false;
-this.espacioPulsado=false;
-
-this.tiempoTranscurrido=new Date().getTime();
-this.esperandoTecla=false;
-};
-
-/*this.iniciarEntidades=function(){
-this.nave=new EntidadNave();
-this.nave.constructor(this,370,550);
-this.listaEntidades.push(this.nave);
-
-this.contadorAliens=0;
-for (var fila=0;fila&amp;lt;5;fila++) {
-    for (var i=0;i&amp;lt;12;i++) {
-        var alien=new EntidadAlien();
-        alien.constructor(this,100+i*50,50+fila*30);
-        this.listaEntidades.push(alien);
-        this.contadorAliens++;
+    kill() {
+        super.kill();
+        this._eventDispatcher.add(EventDispatcher.Event.ALIEN_KILLED);
     }
 }
-};*/
 </code></pre>
 
-<p>Tenemos un método nuevo, <strong>empezarJuego</strong>, que hará que cuando se pulse la tecla ENTER, se reseteen algunos de los atributos necesarios para iniciar una nueva partida. Simplemente viendo su código queda bastante claro lo que hace.</p>
+<p>Le declaramos un atirbuto nuevo, una instancia de la clase llamada <strong>EventDispatcher</strong>, que usamos para declarar un evento llamado <code>EventDispatcher.Event.ALIEN_KILLED</code> que se añadirá cuando un alien muera. ¿Qué representa?</p>
 
-<pre><code class="language-javascript">/*this.actualizaLogica=function(){
-this.logicaRequerida=true;
-};*/
+<pre><code class="language-javascript">'use strict'
+class EventDispatcher {
+    constructor() {
+        this.events = [];
+    }
 
-this.eliminarEntidad=function(entidad){
-this.listaEntidadesEliminar.push(entidad);
-};
+    clear() {
+        this.events = [];
+    }
 
-this.notificarMuerte=function(){
-this.panel.innerHTML=&quot;La tierra ha sido destruida tras una invasion alienígena por tu culpa.&amp;lt;br/&amp;gt;Presiona ENTER para intentarlo de nuevo.&quot;;
-this.esperandoTecla=true;
-};
+    add(event) {
+        this.events.push({ event: event });
+    }
 
-this.notificarVictoria=function(){
-this.panel.innerHTML=&quot;¡Felicidades! ¡De momento seguimos vivos, pero se acercan nuevos enemigos!&amp;lt;br/&amp;gt;Presiona ENTER para atacarlos.&quot;;
-this.esperandoTecla=true;
-};
-
-this.notificarAlienDestruido=function(){
-this.contadorAliens--;
-if (this.contadorAliens==0) {
-    this.notificarVictoria();
-} else {
-    var n=this.listaEntidades.length;
-    for (var i=0;i&amp;lt;n;i++) {
-        if (this.listaEntidades[i] instanceof EntidadAlien) {
-            this.listaEntidades[i].setVelocidadHorizontal(this.listaEntidades[i].getVelocidadHorizontal()*1.02);
-        }
+    static get Event() {
+        return {
+            ALIEN_KILLED : 'alien_killed',
+            PLAYER_KILLED : 'player_killed'
+        };
     }
 }
-};
 </code></pre>
 
-<p>Aquí tenemos las tres nuevas notificaciones útiles para gestionar el fin de la partida, y un pequeño método para insertar en <strong>listaEntidadesEliminar</strong>, las entidades que hay que eliminar. Éste método, como recordarás, es usado por la nueva clase <strong>EntidadDisparo</strong>, en donde su método <strong>colisionadoCon</strong> nos enviará la entidad disparo y la entidad alien que han colisionado en un momento dado. Así, la próxima vuelta del bucle, los eliminará.</p>
+<p>Pues de momento poca cosa. Quizá en un tutorial evolucione, o quizá desaparezca y rehaga los eventos de otra forma. Pero en esta primera proximación solo se encargará de ir acumulando los eventos que se produzcan en cualquier sitio, para que luego el juego los &ldquo;procese&rdquo;. Y para que los eventos no estén declarados directamente como strings sueltos, he preferido tener una especie de constante dentro de la clase.</p>
 
-<p>Los disparos, como veremos después, también se introducen en <strong>listaEntidades</strong>, ya que antes de programar el juego, hicimos un buen diseño para intentar manejar a todas las entidades del juego de la misma forma. Si nuestro método <strong>eliminarEntidad</strong> eliminara las entidades de disparo y alien directamente de la lista, el juego funcionaría mal, y explicaré por qué:</p>
-
-<p>El bucle principal del juego será el que compruebe las colisiones, como veremos después. Lo hace llamando al método <strong>colision</strong> de cada entidad de la lista de entidades. Para ello utiliza un doble bucle for; y para recorrer un bucle for es necesario saber la longitud de la lista a recorrer. Si se detecta una colisión, la entidad afectada llamará a su <strong>colisionadoCon</strong> y también al de la otra entidad, y finalmente el colisionadoCon de la entidad disparo llamará al método <strong>eliminarEntidad</strong> dos veces, que modificarían directamente la lista de entidades eliminando dos de sus posiciones, acortando en dos unidades la longitud real de la lista. La ejecución volvería al bucle principal del juego, para seguir recorriendo la lista buscando colisiones con las entidades que queden. Pero tendríamos un problema: La longitud real de la lista no coincide con la longitud calculada para el bucle for: En las últimas vueltas, ejecutará el método colision a una posición de la lista que no existe, lo que provocará un error en javascript que puede hacer que el juego se detenga.</p>
-
-<p>Para evitarlo, simplemente metemos las entidades a eliminar en una lista independiente. Luego, en el bucle principal, después de que se hayan comprobado todas las colisiones, se mira si la lista de elementos a eliminar contiene alguna entidad, y procede a eliminarla de <strong>listaEntidades</strong>. Así garantizamos un buen funcionamiento.</p>
-
-<p>El método <strong>notificarMuerte</strong> era llamado desde la entidad nave, que representa al jugador, cuando se detecta en su <strong>colisionadoCon</strong> que hemos chocado con una entidad del tipo alien. Lo único que hacemos es llenar el DIV panel con el texto adecuado, y poner el booleano <strong>esperandoTecla</strong> (fin de juego) a true.</p>
-
-<p><strong>NotificarAlienDestruido</strong> era llamado en el <strong>colisionadoCon</strong> de la entidad disparo, para decirle al juego que un alien ha sido destruído. Simplemente le restamos uno al contador de aliens, y si el contador de aliens llega a cero, notificamos al juego que la partida ha acabado con una gran victoria. Para hacer que conforme matamos aliens, la partida se vuelva un poco más difícil, lo que haremos también es incrementar la velocidad de movimiento horizontal de todos los aliens que queden vivos un 2%, una tarea sencilla de realizar utilizando sus métodos getter adecuadamente. Lo único destacable es el uso de <strong>instanceOf</strong>, para ver si la entidad que acabamos de sacar de la lista es una instancia de la clase <strong>EntidadAlien</strong>.</p>
-
-<p><strong>notificarVictoria</strong> es exactamente igual a <strong>notificarMuerte</strong>, pero poniendo en el panel un texto más adecuado.</p>
-
-<pre><code class="language-javascript">this.intentarDisparar=function(){
-if (this.esperandoTecla)
-{
-    return;
-}
-var t=new Date().getTime();
-if (t-this.ultimoDisparo&amp;lt;this.intervaloDisparo)
-{
-    return;
-}
-this.ultimoDisparo=t;
-var disparo=new EntidadDisparo();
-disparo.constructor(this,this.nave.getX()+19, this.nave.getY());
-this.listaEntidades.push(disparo);
-};
-this.pulsarTecla=function(e){
-/*e.preventDefault();*/
-
-if (this.esperandoTecla &amp;amp;&amp;amp; e.keyCode==13)
-{
-    //Enter
-    this.empezarJuego();
-    return;
-}
-/*if (e.keyCode==37)
-{
-    //Cursor izquierdo
-    this.izquierdoPulsado=true;
-}
-else if (e.keyCode==39)
-{
-    //Cursor derecho
-    this.derechoPulsado=true;
-}*/
-else if (e.keyCode==32)
-{
-    //espacio
-    this.espacioPulsado=true;
-}
-
-};
-
-this.soltarTecla=function(e){
-/*e.preventDefault();*/
-/*if (e.keyCode==37)
-{
-    this.izquierdoPulsado=false;
-
-}
-else if (e.keyCode==39)
-{
-    this.derechoPulsado=false;
-}*/
-else if (e.keyCode==32)
-{
-    this.espacioPulsado=false;
-}
-};
-</code></pre>
-
-<p>Como dijimos antes, haremos que entre disparo y disparo, transcurra como mínimo cierta cantidad de tiempo. El booelano asociado a la tecla espacio se establece al igual que con los cursores en <strong>pulsarTecla</strong> y <strong>soltarTecla</strong>, con lo que no necesita de más explicaciones. En <strong>pulsarTecla</strong>, además, detectaremos si el jugador ha pulsado el ENTER (código 13) mientras el booleano que nos indica si estamos en el final de una  partida (<strong>pulsaTecla</strong>) es true, en cuyo caso llamamos al método que resetea el juego para comenzar de nuevo que vimos anteriormente.</p>
-
-<p>En cuanto al método <strong>intentarDisparar</strong>, que será llamado en el bucle principal del juego tras comprobar que <strong>espacioPulsado</strong> es true, se encargará de realizar un disparo, o no. Por supuesto, si <strong>esperandoTecla</strong> es true, no tiene sentido disparar. Luego, comprobamos si ha pasado el mínimo tiempo necesario desde el último disparo. Si es así, creamos una nueva instancia de la clase EntidadDisparo y la añadimos a <strong>listaEntidades</strong> para que el bucle principal la maneje homogeneamente junto al resto de entidades. Como sabemos que la nave del jugador mide 40 de ancho, y que el disparo mide 2, le pongo un valor de 19 a su coordenada X del vértice superior derecho para que la dibuje justo en el centro de la nave. Si algún día cambio el ancho del disparo o de la nave, se verá desajustado. Lo correcto habría sido recuperar los valores adecuados de las entidades nave y disparo, y utilizarlos para calcular la coordenada exacta. Os lo dejo como tarea.</p>
-
-<pre><code class="language-javascript">this.loop=function(){
-/*if (this.gameRunning) {
-    var delta=(new Date().getTime()) - this.tiempoTranscurrido;
-    this.tiempoTranscurrido=new Date().getTime();
-    this.contexto.clearRect(0,0,this.canvas.width,this.canvas.height);
-    var n=this.listaEntidades.length;
-    if (!this.esperandoTecla) {
-        for (var i=0;i&amp;lt;n;i++) {
-            this.listaEntidades[i].mover(delta);
-        }
+<pre><code class="language-javascript">class Game {
+    constructor(id) {
+        // ...
+        this._eventDispatcher = new EventDispatcher();
     }
-    for (var i=0;i&amp;lt;n;i++) {
-        this.listaEntidades[i].dibujar(this.contexto);
-    }*/
-    for(var i=0;i&amp;lt;n-1;i++) {
-        for(var j=i+1;j&amp;lt;n;j++) {
-            var uno=this.listaEntidades[i];
-            var otro=this.listaEntidades[j];
-            if (uno.getTipo()!=otro.getTipo() &amp;amp;&amp;amp; uno.colision(otro)) {
-                uno.colosionadoCon(otro);
-                otro.colosionadoCon(uno);
+
+    init() {
+        this._restart();
+        this._loop();
+    }
+
+    _restart() {
+        this._score = 0;
+        this._lives = 2;
+        this._reload();
+    }
+
+    _reload() {
+        this._player = new Player(370, 550, this._eventDispatcher);
+        this._shots = [];
+        this._aliens = [];
+        for (var row = 0; row &lt; 5; row++) {
+            for (var column = 0; column &lt; 12; column++) {
+                this._aliens.push(
+                    new Alien(100 + column * 50, 50 + row * 30, this._eventDispatcher)
+                );
             }
         }
+        this._time = Date.now();
+        this._status = Game.Status.RUNNING;
     }
 
-    var m=this.listaEntidadesEliminar.length;
-    for(var i=0;i&amp;lt;m;i++) {
-        var n=this.listaEntidades.length;
-        for(var j=0;j&amp;lt;n;j++) {
-            if (this.listaEntidadesEliminar[i]==this.listaEntidades[j]) {
-                this.listaEntidades.splice(j,1);
+    // ...
+
+    _applyEvents() {
+        this._eventDispatcher.events.forEach(
+            event =&gt; function(event) {
+                switch(event.event) {
+                    case EventDispatcher.Event.ALIEN_KILLED:
+                        this._score += 10;
+                        if (this._aliens.length === 0) {
+                            this._status = Game.Status.WIN;
+                        }
+                        break;
+                    case EventDispatcher.Event.PLAYER_KILLED:
+                        this._status = this._lives &gt; 0 ? Game.Status.CONTINUE : Game.Status.GAME_OVER;
+                        break;
+                }
+            }.call(this, event)
+        );
+        this._eventDispatcher.clear();
+    }
+
+    static get Status() {
+        return {
+            WIN : 'win',
+            CONTINUE : 'continue',
+            GAME_OVER : 'game_over',
+            RUNNING : 'running'
+        }
+    }
+}
+</code></pre>
+
+<p>Como vemos, hemos cambiado un poco la forma de la clase <strong>GAME</strong>. Además de instanciar el <strong>EventDispatcher</strong> en su controlador, y dos atributos que gestionarán la puntuación <em>_score</em> y el número de vidas del jugador <em>_lives</em>. Como consecuencia de que ahora una partida tiene varios posibles finales, que mencionamos antes, hemos dividido el <em>init()</em> en dos métodos más, <em>_restart</em> y <em>_reload</em>, para empezar una partida nueva, o reiniciar el nivel sin resetear puntuación y vidas restantes.</p>
+
+<p>Como podemos ver, le metemos el event dispatcher a el jugador y a los aliens, para que puedan añadirle el evento asociado a ese trágico acontecimiento. Por último, algún lugar del código se encargará de llamar al nuevo método <em>_applyEvents</em> que se encargará de hacer las modificaciones pertinentes para el tipo de evento que acaba de pasar, borrando los eventos después de hacerlo.</p>
+
+<p>La gestión de los eventos es bastante sencilla. Cuando un alien muera, sumaremos puntuación y comprobaremos si queda alguno vivo. Si no quedan, pondremos el <em>_status</em> del juego a <code>Game.Status.WIN</code>. Y si el jugador ha muerto, pues entonces lo ponemos a <code>Game.Status.WIN</code> o a <code>Game.Status.WIN</code> dependiendo de si al jugador le quedan vidas o no. Como se puede ver en el método <em>_reload</em>, el <em>_status</em> inicial es <code>Game.Status.RUNNING</code>.</p>
+
+<p>Como nota, podemos ver que el <em>_applyEvents</em> hace un <code>function(event){ this.cosas... }.cal(this, event)</code>. El método <em>call</em> sirve para ejecutar la función asignándole como padre su primer argumento &ldquo;padre&rdquo;, y pasándole el resto de los argumentos de <em>call</em> como argumentos de dicha función. En el ejemplo, <em>events</em>. Así evitamos hacer el típico <code>let self = this; function () { self.cosas... }</code>. El que conozca las peculiaridades del <a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Operadores/this">this</a> y los <a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Closures">closures</a> de javascript sabrá de lo que hablo porque los habrá sufrido en sus carnes.</p>
+
+<p>Bueno, los eventos nos han servido para cambiar el estado de un juego. ¿Cómo afecta esto a la lógica? Pues veámos por fin la versión final de <em>Game</em>.</p>
+
+<pre><code class="language-javascript">class Game {
+    // ...
+    _loop() {
+        switch(this._status) {
+            case Game.Status.RUNNING:
+                this._gameLogic();
+                this._update();
+                this._applyEvents();
                 break;
-            }
+            case Game.Status.WIN:
+                this._winLogic();
+                break;
+            case Game.Status.CONTINUE:
+                this._continueLogic();
+                break;
+            case Game.Status.GAME_OVER:
+                this._gameoverLogic();
+        }
+        this._render();
+        window.requestAnimationFrame(() =&gt; this._loop());
+    }
+
+    _gameLogic() {
+        this._shotsLogic();
+        this._alienLogic();
+        this._playerLogic();
+    }
+
+    // ...
+
+    _winLogic() {
+        if (this._keyboard.is(Keyboard.Key.ENTER)) {
+            this._reload();
         }
     }
-    this.listaEntidadesEliminar=[];
 
-    /*if (this.logicaRequerida) {
-        var n=this.listaEntidades.length;
-        for (var i=0;i&amp;lt;n;i++) {
-            this.listaEntidades[i].logica();
+    _continueLogic() {
+        if (this._keyboard.is(Keyboard.Key.ENTER)) {
+            this._lives--;
+            this._reload();
         }
-        this.logicaRequerida=false;
-    }*/
-
-    if (this.esperandoTecla) {
-        this.panel.style.display=&quot;block&quot;;
-    } else {
-        this.panel.style.display=&quot;none&quot;;
     }
 
-    /*this.nave.setVelocidadHorizontal(0);
-    if (this.izquierdoPulsado &amp;amp;&amp;amp; !this.derechoPulsado) {
-        this.nave.setVelocidadHorizontal(-this.velocidadMovimiento);
-    } else if (!this.izquierdoPulsado &amp;amp;&amp;amp; this.derechoPulsado) {
-        this.nave.setVelocidadHorizontal(this.velocidadMovimiento);
-    }*/
-    if (this.espacioPulsado) {
-        this.intentarDisparar();
+    _gameoverLogic() {
+        if (this._keyboard.is(Keyboard.Key.ENTER)) {
+            this._restart();
+        }
     }
-}
-};
 
+    _render() {
+        // ...
+        this._renderer.gui(this._score, this._lives);
+        switch(this._status) {
+            case Game.Status.CONTINUE:
+                this._renderer.menu('Yo are death, but you have more lives.', 'Press &lt;ENTER&gt; to continue the game...');
+                break;
+            case Game.Status.GAME_OVER:
+                this._renderer.menu('Game over!', 'Press &lt;ENTER&gt; to start a new game...');
+                break;
+            case Game.Status.WIN:
+                this._renderer.menu('Congratulations! You won the game!', 'Press &lt;ENTER&gt; to start new level...');
+                break;
+        }
+    }
 
-/*this.controlLoop=function(){
-if (this.gameRunning) {
-    this.loop();
-} else {
-    this.tiempoTranscurrido=new Date().getTime();
-    this.gameRunning=true;
-}
-};*/
+    // ...
 }
 </code></pre>
 
-<p>Y por último, nuestro querido bucle principal del juego. Como he mencionado varias veces, el orden en el que se ejecutan las tareas necesarias suele ser decisivo para un buen funcionamiento del juego y de sus animaciones.</p>
+<p>El <em>_loop</em> gestionará los estados, llamando a su respectivo método particular. Los estados nuevos simplementen se quedan a la espera de que el usuario pulse la tecla <code>Keyboard.Key.ENTER</code> para reinicar la partida. Y el método <em>_render</em> se encargará de dibujar en pantalla el texto adecuado según el estado actual.</p>
 
-<p>Cuando se crean y se posicionan las entidades, justo cuando arranca el juego, no hay ninguna clase de conflicto ni colisión que se tenga que resolver. Así que el siguiente paso lógico es hacer que se muevan un poco. Si en vez de eso, las hubiera dibujado primero, tendría un problema en la animación. Despues de dibujarlas las movería, y después calcularía colisiones. Por último eliminaría las entidades colisionadas. ¿Qué está mal? Pues que probablemente borre un disparo y un alien antes de haber dibujado en la pantalla cómo chocan. Asi que nada. Lo primero, es moverlas.</p>
+<pre><code class="language-javascript">class Render2D {
+    // ...
 
-<p>A continuación las dibujo. También podría haber hecho los cálculos de colisiones antes. Lo fundamental, es no eliminar entidades antes de dibujarlas, para que se vea bien el choque. Yo he preferido dibujarlas primero y después calcular las colisiones. Podemos ver que para detectar colisiones estamos usando un doble bucle. Lo que hace el bucle es coger la primera entidad de la lista, y comprobar si colisiona con el resto de posiciones de la lista. Luego cogemos la segunda entidad de la lista, y comprobamos si colisiona con la tercera en adelante. No hace falta comprobarlas con las posiciones que están antes en la lista, pues al comprobar si la entidad A colisiona con B, también hemos resuelto el caso de que B choque con A. Además, antes de calcular si los rectángulos de dos entidades chocan, comprobamos que sean de tipos diferentes, con aquél atributo nuevo que añadimos a las clases hijas de <strong>Entidad</strong>. Un alien nunca puede chocar con un alien, y un disparo nunca puede chocar con un disparo. Sin embargo, sí calcula la colisión entre la entidad nave y la entidad disparo, lo que también es una comprobación absurda. Pero si añado una condición más al IF para que no lo haga, al tener que ejecutar la condición en cada vuelta del bucle anidado, es posible que tarde más que dejar que se comprueben las colisiones entre la nave (que sólo hay una) y los escasos disparos (como mucho 4 o 5) que habrán en la lista de entidades en un momento dado.</p>
+    gui(score, lives) {
+        //Dibuamos una GUI b�sica
+        this._ctx.fillStyle = &quot;white&quot;;
+        this._ctx.font = &quot;bold 20px monospace&quot;;
+        this._ctx.fillText(score + &quot; Score&quot;, 20, 30);
+        this._ctx.fillText(lives + &quot; Lives&quot;, this._canvas.width - 110, 30);
+    }
 
-<p>A continuación elimino las entidades afectadas por las colisiones. Es decir, busco y elimino de la <strong>listaEntidades</strong> cada elemento que haya en <strong>listaEntidadesEliminar</strong>, usando la función <strong>splice</strong> que traen los arrays (listas, tablas, arreglos) en javascript. Cuando los haya borrado todos, vacío la lista de entidades a eliminar.</p>
+    menu(title, subtitle) {
+        this._ctx.fillStyle = &quot;red&quot;;
+        this._ctx.font = &quot;bold 30px monospace&quot;;
+        let titleWidth = this._ctx.measureText(title).width;
+        this._ctx.fillText(
+            title,
+            (this._canvas.width - titleWidth) / 2,
+            this._canvas.height / 2 - 30,
+        );
 
-<p>Tras comprobar si se ha de ejecutar el método logica de las entidades, compruebo si estamos en el final de un juego (esperandoTecla a true). Si lo estamos, hago que se muestre el panel donde está el texto a mostrar. Si no, lo oculto. Es una forma bastante mejorable de detectar el final de una partida, porque hacemos esa comprobación en cada vuelta del bucle principal, que ni siquiera se detiene, pero bueno. Juegos más complicados suelen utilizar otra técnica: Manejar el juego por estados. Quizás algún día haga un tutorial sobre ello.</p>
+        this._ctx.font = &quot;bold 20px monospace&quot;;
+        let subtitleWidth = this._ctx.measureText(subtitle).width;
+        this._ctx.fillText(
+            subtitle,
+            (this._canvas.width - subtitleWidth) / 2,
+            this._canvas.height / 2 + 5,
+        );
+    }
+}
+</code></pre>
 
-<p>Por último, comprobamos al igual que los cursores si la tecla espacio está apretada, y llamamos al método <strong>intenterDisparo</strong> para que si puede, dispare.</p>
+<p>Los nuevos métodos de <strong>Render2D</strong> no tienen tampoco mucho misterio. Escriben texto en pantalla, con un color, fuente y tamaño especificado. El método <em>menu</em> además calcula el ancho que tendrá el texto, para intentar centrarlo en la pantalla. Pero nada especialmente complicado.</p>
 
-<p>Y se acabó, ya tenemos nuestro primer videojuego de Space Invaders, muy sencillito y sin ningún alarde gráfico, pero por algo teníamos que empezar. Aún queda mucho que aprender, como meterle algún tipo de puntuación, dibujar imágenes en vez de rectángulos, hacer que esas imágenes estén animadas, introducir efectos sonoros&hellip; ¡El único límite es tu imaginación (o las ganas de plagiar que tengas)!</p>
+<p>Por último, para hacer ligeramente más complicado el juego, haremos que los aliens incremente un poco, el 4.5%, la velocidad de movimiento cuando cambien de sentido. No es más que tocar el método correspondiente del alien.</p>
+
+<pre><code class="language-javascript">class Alien extends Entity {
+    // ...
+    changeDirection() {
+        this.dx *= -1.045;
+        // ...
+    }
+    // ...
+}
+</code></pre>
+
+<p>Y se acabó, ya tenemos nuestro primer videojuego de Space Invaders, muy sencillito y sin ningún alarde gráfico, pero por algo teníamos que empezar. Aún queda mucho que aprender, como usar imágenes en vez de rectángulos, hacer que esas imágenes estén animadas, introducir efectos sonoros&hellip; ¡El único límite es tu imaginación (o las ganas de plagiar que tengas)!</p>
 
 </article>
 

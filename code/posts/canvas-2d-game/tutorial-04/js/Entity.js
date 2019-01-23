@@ -1,6 +1,6 @@
 'use strict'
 class Entity {
-    constructor(x, y, dx, dy, width, height, color, eventDispatcher) {
+    constructor(x, y, dx, dy, width, height, color) {
         this.x = x;
         this.y = y;
         this.dx = dx;
@@ -9,7 +9,6 @@ class Entity {
         this.height = height;
         this.color = color;
         this.alive = true;
-        this._eventDispatcher = eventDispatcher;
     }
 
     move(delta) {

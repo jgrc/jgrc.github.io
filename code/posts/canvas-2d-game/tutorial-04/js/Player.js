@@ -1,7 +1,8 @@
 'use strict'
 class Player extends Entity {
     constructor(x, y, eventDispatcher) {
-        super(x, y, 0, 0, 40, 25, 'green', eventDispatcher);
+        super(x, y, 0, 0, 40, 25, 'green');
+        this._eventDispatcher = eventDispatcher;
         this.velocity = 120;
         this._shotDelay = 1000;
         this._lastShot = Date.now() - this._shotDelay;
@@ -23,7 +24,7 @@ class Player extends Entity {
         let now = Date.now();
         if (now - this._lastShot > this._shotDelay) {
             this._lastShot = now;
-            return new Shot(Math.round(this.x + this.width / 2), this.y, this._eventDispatcher)
+            return new Shot(Math.round(this.x + this.width / 2), this.y)
         }
 
         return null;

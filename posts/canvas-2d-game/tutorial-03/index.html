@@ -124,7 +124,7 @@
 
 <p><img align="left" src="/img/posts/canvas-2d-game/tutorial-02.png" alt="Tutorial 03" title="Tutorial 03" style="padding: 10px;" /></p>
 
-<p><a href="/code/posts/canvas-2d-game/tutorial-03/">Aquí</a> puedes correr la versión del juego que vamos a detallar en este artículo.</p>
+<p><a href="/code/posts/canvas-2d-game/tutorial-03/">Aquí</a> puedes correr la versión del juego que vamos a comentar en este artículo.</p>
 
 <h2 id="el-tiempo-delta">El tiempo delta</h2>
 
@@ -226,9 +226,9 @@ class Game {
 
 <p>Con este chequeo, ya tenemos la velocidad adecuada seteada en cada alien. Ahora toca moverlos, para que aplique esa velocidad, a su coordenada correspondiente. El método <em>_update</em> se encargará de todo. Lo primero que hace es calcular el tiempo delta, que como dijimos anteriormente, no es mas que calcular el tiempo transcurrido desde la última ejecución del bucle principal. A continuación, me basta con ejecutar el <em>move</em> de cada alien pasándole el tiempo delta.</p>
 
-<p>Es importante destacar que al calcular el tiempo delta, le metemos como máximo un 100 (milisegundos). ¿Por qué? Pues la razón medio la mencioné antes en negrita y todo: Si el usuario cambia de pestaña, o cambia de aplicación, el navegador pausará el bucle. Cuando vuelva, lo continuará, pero el tiempo transcurrido puede que esté en el orden de segundos o incluso minutos. Eso puede ser un desastre, si ordenamos que las entidades se muevan tanto tiempo de golpe. Para evitarlo, basta con ese simple límite. Cuando el navegador retome, como máximo el tiempo delta calculado será de 100 milisegundos. Normalmente, este tiempo está entre los 3 y los 10 milisegundos, dependiendo de la potencia de tu PC.</p>
+<p>Es importante destacar que al calcular el tiempo delta, le metemos como máximo un 100 (milisegundos). ¿Por qué? Pues la razón medio la mencioné antes en negrita y todo: Si el usuario cambia de pestaña, o cambia de aplicación, el navegador pausará el bucle. Cuando vuelva, lo continuará, pero el tiempo transcurrido puede que esté en el orden de segundos o incluso minutos. Eso puede ser un desastre, si ordenamos que las entidades se muevan tanto tiempo de golpe. Para evitarlo, basta con ese simple límite. Cuando el navegador retome, como máximo el tiempo delta calculado será de 100 milisegundos. Normalmente, este tiempo está entre los 15 y los 25 milisegundos, dependiendo de la potencia de tu PC.</p>
 
-<p>Y con ésto, de momento ya ternemos todos los aliens bailando por la pantalla. Cuando lleguen a la zona del jugador, continuarán su viaje hasta el infinito, porque no tenemos ningun código que lo evite. Ya llegaremos a eso en un próximo tutorial.</p>
+<p>Y con ésto, de momento ya tenemos todos los aliens bailando por la pantalla. Cuando lleguen a la zona del jugador, continuarán su viaje hasta el infinito, porque no tenemos ningun código que lo evite. Ya llegaremos a eso en un próximo tutorial.</p>
 
 <p>Veámos que pasa con el jugador.</p>
 

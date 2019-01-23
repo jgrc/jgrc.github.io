@@ -7,6 +7,11 @@ class Game {
     }
 
     init() {
+        this._restart();
+        this._loop();
+    }
+
+    _restart() {
         this._score = 0;
         this._lives = 2;
         this._reload();
@@ -24,17 +29,26 @@ class Game {
             }
         }
         this._time = Date.now();
-        this._running = true;
-        this._loop();
+        this._status = Game.Status.RUNNING;
     }
 
     _loop() {
-        if (this._running) {
-            this._gameLogic();
-            this._update();
-            this._render();
-            this._applyEvents();
+        switch(this._status) {
+            case Game.Status.RUNNING:
+                this._gameLogic();
+                this._update();
+                this._applyEvents();
+                break;
+            case Game.Status.WIN:
+                this._winLogic();
+                break;
+            case Game.Status.CONTINUE:
+                this._continueLogic();
+                break;
+            case Game.Status.GAME_OVER:
+                this._gameoverLogic();
         }
+        this._render();
         window.requestAnimationFrame(() => this._loop());
     }
 
@@ -95,8 +109,26 @@ class Game {
         let now = Date.now();
         let delta = Math.min(now - this._time, 100);
         this._time = now;
-
         return delta;
+    }
+
+    _winLogic() {
+        if (this._keyboard.is(Keyboard.Key.ENTER)) {
+            this._reload();
+        }
+    }
+
+    _continueLogic() {
+        if (this._keyboard.is(Keyboard.Key.ENTER)) {
+            this._lives--;
+            this._reload();
+        }
+    }
+
+    _gameoverLogic() {
+        if (this._keyboard.is(Keyboard.Key.ENTER)) {
+            this._restart();
+        }
     }
 
     _render() {
@@ -104,6 +136,18 @@ class Game {
         this._renderer.entity(this._player);
         this._aliens.forEach(alien => this._renderer.entity(alien));
         this._shots.forEach(shot => this._renderer.entity(shot));
+        this._renderer.gui(this._score, this._lives);
+        switch(this._status) {
+            case Game.Status.CONTINUE:
+                this._renderer.menu('Yo are death, but you have more lives.', 'Press <ENTER> to continue the game...');
+                break;
+            case Game.Status.GAME_OVER:
+                this._renderer.menu('Game over!', 'Press <ENTER> to start a new game...');
+                break;
+            case Game.Status.WIN:
+                this._renderer.menu('Congratulations! You won the game!', 'Press <ENTER> to start new level...');
+                break;
+        }
     }
 
     _applyEvents() {
@@ -113,15 +157,24 @@ class Game {
                     case EventDispatcher.Event.ALIEN_KILLED:
                         this._score += 10;
                         if (this._aliens.length === 0) {
-                            this._running = false;
+                            this._status = Game.Status.WIN;
                         }
                         break;
                     case EventDispatcher.Event.PLAYER_KILLED:
-                        this._running = false;
+                        this._status = this._lives > 0 ? Game.Status.CONTINUE : Game.Status.GAME_OVER;
                         break;
                 }
             }.call(this, event)
         );
         this._eventDispatcher.clear();
+    }
+
+    static get Status() {
+        return {
+            WIN : 'win',
+            CONTINUE : 'continue',
+            GAME_OVER : 'game_over',
+            RUNNING : 'running'
+        }
     }
 }

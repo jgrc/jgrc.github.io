@@ -14,9 +14,8 @@ class EventDispatcher {
 
     static get Event() {
         return {
-            ALIEN_KILLED: 'alien_killed',
-            PLAYER_KILLED: 'player_killed',
-            SHOT: 'shot'
+            ALIEN_KILLED : 'alien_killed',
+            PLAYER_KILLED : 'player_killed'
         };
     }
 }
